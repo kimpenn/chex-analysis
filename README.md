@@ -5,9 +5,9 @@ For CHEX-seq computational pipeline, see [chex-pipeline](https://github.com/kimp
 
 ## Copyright
 ```
-    Copyright (c) 2017-2023, Youtao Lu and Junhyong Kim, Department of Biology, University of Pennsylvania
-    Copyright (c) 2017-2023, James Eberwine, Perelman School of Medicine, University of Pennsylvania
-    All Rights Reserved.
+Copyright (c) 2017-2023, Youtao Lu and Junhyong Kim, Department of Biology, University of Pennsylvania
+Copyright (c) 2017-2023, James Eberwine, Perelman School of Medicine, University of Pennsylvania
+All Rights Reserved.
 ```
 
 ## Reference
