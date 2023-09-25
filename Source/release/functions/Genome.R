@@ -189,6 +189,7 @@ local({
             features <- IRanges(ranges(features))
             featureTiles <- tile(features, n = nbins)
             cvgsList <- rep(list(cvgs), nfeatures)
+            cvgsList <- as(cvgsList, "SimpleRleList")
             cvgViews <- views(cvgsList, featureTiles)
             cvgsPerFeature <- viewMeans(cvgViews)
             cvgsPerFeature <- do.call(rbind, cvgsPerFeature)
