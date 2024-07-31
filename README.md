@@ -12,4 +12,4 @@ All Rights Reserved.
 ```
 
 ## Reference
-* Youtao Lu, Jaehee Lee, Jifen Li, Srini Rao Allu, Jinhui Wang, Hyun-Bum Kim, Kevin L. Bullaughey, Stephen A. Fisher, C. Erik Nordgren, Jean G. Rosario, Stewart A. Anderson, Alexandra V. Ulyanova, Steven Brem, H. Isaac Chen, John A. Wolf, M. Sean Grady, Sergei A. Vinogradov, Junhyong Kim and James Eberwine. "CHEX-seq Detects Single-Cell Single-Strand DNA With Catalytical Capacity." (under review)
+* Youtao Lu, Jaehee Lee, Jifen Li, Srinivasa Rao Allu, Jinhui Wang, Hyun-Bum Kim, Kevin L. Bullaughey, Stephen A. Fisher, C. Erik Nordgren, Jean G. Rosario, Stewart A. Anderson, Alexandra V. Ulyanova, Steven Brem, H. Isaac Chen, John A. Wolf, M. Sean Grady, Sergei A. Vinogradov, Junhyong Kim and James Eberwine. "CHEX-seq Detects Single-Cell Genomic Single-Strand DNA with Catalytical Potential." ([Nature Communications 14, 7346 (2023)](https://www.nature.com/articles/s41467-023-43158-6))
