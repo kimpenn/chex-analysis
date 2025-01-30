@@ -8,7 +8,7 @@
 ## License, v. 2.0. If a copy of the MPL was not distributed with this
 ## file, You can obtain one at http://mozilla.org/MPL/2.0/.
 ###########################################################################
-source("Source/release/functions.R")
+source("Source/functions.R")
 
 ## Genome assembly defaults to hg38 and mm10
 .RERUN <- FALSE
@@ -370,9 +370,9 @@ length(EnsHg38IntronsByGene)
         FlankDn5kByGene = EnsFlankDn5kByGene,
         GeneExt = EnsGenesExt
     )
-    saveRDS(EnsFeatures, file = "Data/release/GenomicFeatures/EnsFeatures.RDS")
+    saveRDS(EnsFeatures, file = "Data/GenomicFeatures/EnsFeatures.RDS")
 } else {
-    EnsFeatures <- readRDS("Data/release/GenomicFeatures/EnsFeatures.RDS")
+    EnsFeatures <- readRDS("Data/GenomicFeatures/EnsFeatures.RDS")
 }
 
 ###########################################################################
@@ -391,9 +391,9 @@ if (.RERUN) {
     UCSCRn6Cytobands <- import("Data/Genome/Rat/UCSC/rn6.cytoBandIdeo.fromTable.gtf")
     UCSCCytobands <- list(human = UCSCHg38Cytobands, mouse = UCSCMm10Cytobands, rat = UCSCRn6Cytobands)
     UCSCCytobands <- sapply(c("human", "mouse", "rat"), function(species) Genome$standardizeSeqInfo(UCSCCytobands[[species]], seqInfo = Genome$MainSeqInfo[[species]], seqLevels = Genome$MainSeqLevels[[species]], prune = TRUE), simplify = FALSE)
-    saveRDS(UCSCCytobands, file = "Data/release/GenomicFeatures/UCSCCytobands.RDS")
+    saveRDS(UCSCCytobands, file = "Data/GenomicFeatures/UCSCCytobands.RDS")
 } else {
-    UCSCCytobands <- readRDS("Data/release/GenomicFeatures/UCSCCytobands.RDS")
+    UCSCCytobands <- readRDS("Data/GenomicFeatures/UCSCCytobands.RDS")
 }
 
 ###########################################################################
@@ -407,9 +407,9 @@ if (.RERUN) {
         rat = sort(import(con = "Data/ENCODE/Blacklist/Kundaje/rn6.blacklist.bed", format = "bed"))
     )
     BlacklistedGRs <- sapply(c("human", "mouse", "rat"), function(species) Genome$standardizeSeqInfo(BlacklistedGRs[[species]], seqInfo = Genome$MainSeqInfo[[species]], seqLevels = Genome$MainSeqLevels[[species]], prune = TRUE), simplify = FALSE)
-    saveRDS(BlacklistedGRs, file = "Data/release/GenomicFeatures/BlacklistedGRs.RDS")
+    saveRDS(BlacklistedGRs, file = "Data/GenomicFeatures/BlacklistedGRs.RDS")
 } else {
-    BlacklistedGRs <- readRDS("Data/release/GenomicFeatures/BlacklistedGRs.RDS")
+    BlacklistedGRs <- readRDS("Data/GenomicFeatures/BlacklistedGRs.RDS")
 }
 
 ###########################################################################
@@ -421,9 +421,9 @@ if (.RERUN) {
     UCSCRn6Repeats <- import("Data/Genome/Rat/UCSC/rn6.rmsk.fromTable.gtf")
     UCSCRepeats <- list(human = UCSCHg38Repeats, mouse = UCSCMm10Repeats, rat = UCSCRn6Repeats)
     UCSCRepeats <- sapply(c("human", "mouse", "rat"), function(species) Genome$standardizeSeqInfo(UCSCRepeats[[species]], seqInfo = Genome$MainSeqInfo[[species]], seqLevels = Genome$MainSeqLevels[[species]], prune = TRUE), simplify = FALSE)
-    saveRDS(UCSCRepeats, file = "Data/release/GenomicFeatures/UCSCRepeats.RDS")
+    saveRDS(UCSCRepeats, file = "Data/GenomicFeatures/UCSCRepeats.RDS")
 } else {
-    UCSCRepeats <- readRDS("Data/release/GenomicFeatures/UCSCRepeats.RDS")
+    UCSCRepeats <- readRDS("Data/GenomicFeatures/UCSCRepeats.RDS")
 }
 
 ###########################################################################
@@ -436,9 +436,9 @@ if (.RERUN) {
         rat = import("Data/Genome/Rat/UCSC/rn6.cpgIslandExt.fromTable.gtf")
     )
     UCSCCpGIslands <- sapply(c("human", "mouse", "rat"), function(species) Genome$standardizeSeqInfo(UCSCCpGIslands[[species]], seqInfo = Genome$MainSeqInfo[[species]], seqLevels = Genome$MainSeqLevels[[species]], prune = TRUE), simplify = FALSE)
-    saveRDS(UCSCCpGIslands, file = "Data/release/GenomicFeatures/UCSCCpGIslands.RDS")
+    saveRDS(UCSCCpGIslands, file = "Data/GenomicFeatures/UCSCCpGIslands.RDS")
 } else {
-    UCSCCpGIslands <- readRDS("Data/release/GenomicFeatures/UCSCCpGIslands.RDS")
+    UCSCCpGIslands <- readRDS("Data/GenomicFeatures/UCSCCpGIslands.RDS")
 }
 
 ###########################################################################
@@ -465,9 +465,9 @@ if (.RERUN) {
         mouse = list(Gene = EnsMm10GeneIDsMainNoMY, Transcript = EnsMm10TranscriptIDsMainNoMY, Intergenic = EnsMm10IntergenicIDsMainNoMY, CpG = UCSCMm10CpGIDsMainNoMY),
         rat = list(Gene = EnsRn6GeneIDsMainNoMY, Transcript = EnsRn6TranscriptIDsMainNoMY, Intergenic = EnsRn6IntergenicIDsMainNoMY, CpG = UCSCRn6CpGIDsMainNoMY)
     )
-    saveRDS(FeatureIDsMainNoMY, file = "Data/release/GenomicFeatures/FeatureIDsMainNoMY.RDS")
+    saveRDS(FeatureIDsMainNoMY, file = "Data/GenomicFeatures/FeatureIDsMainNoMY.RDS")
 } else {
-    FeatureIDsMainNoMY <- readRDS("Data/release/GenomicFeatures/FeatureIDsMainNoMY.RDS")
+    FeatureIDsMainNoMY <- readRDS("Data/GenomicFeatures/FeatureIDsMainNoMY.RDS")
 }
 
 ###########################################################################
@@ -485,9 +485,9 @@ if (.RERUN) {
         mouse = list(Gene = EnsMm10GeneIDsProt, Transcript = EnsMm10TranscriptIDsProt), 
         rat = list(Gene = EnsRn6GeneIDsProt, Transcript = EnsRn6TranscriptIDsProt)
     )
-    saveRDS(EnsFeatureIDsProt, file = "Data/release/GenomicFeatures/EnsFeatureIDsProt.RDS")
+    saveRDS(EnsFeatureIDsProt, file = "Data/GenomicFeatures/EnsFeatureIDsProt.RDS")
 } else {
-    EnsFeatureIDsProt <- readRDS("Data/release/GenomicFeatures/EnsFeatureIDsProt.RDS")
+    EnsFeatureIDsProt <- readRDS("Data/GenomicFeatures/EnsFeatureIDsProt.RDS")
 }
 
 ###########################################################################
@@ -505,9 +505,9 @@ if (.RERUN) {
         mouse = list(Gene = EnsMm10GeneIDsChrM, Transcript = EnsMm10TranscriptIDsChrM), 
         rat = list(Gene = EnsRn6GeneIDsChrM, Transcript = EnsRn6TranscriptIDsChrM)
     )
-    saveRDS(EnsFeatureIDsChrM, file = "Data/release/GenomicFeatures/EnsFeatureIDsChrM.RDS")
+    saveRDS(EnsFeatureIDsChrM, file = "Data/GenomicFeatures/EnsFeatureIDsChrM.RDS")
 } else {
-    EnsFeatureIDsChrM <- readRDS("Data/release/GenomicFeatures/EnsFeatureIDsChrM.RDS")
+    EnsFeatureIDsChrM <- readRDS("Data/GenomicFeatures/EnsFeatureIDsChrM.RDS")
 }
 
 ###########################################################################
@@ -525,9 +525,9 @@ if (.RERUN) {
         mouse = list(Gene = EnsMm10GeneIDsChrY, Transcript = EnsMm10TranscriptIDsChrY), 
         rat = list(Gene = EnsRn6GeneIDsChrY, Transcript = EnsRn6TranscriptIDsChrY)
     )
-    saveRDS(EnsFeatureIDsChrY, file = "Data/release/GenomicFeatures/EnsFeatureIDsChrY.RDS")
+    saveRDS(EnsFeatureIDsChrY, file = "Data/GenomicFeatures/EnsFeatureIDsChrY.RDS")
 } else {
-    EnsFeatureIDsChrY <- readRDS("Data/release/GenomicFeatures/EnsFeatureIDsChrY.RDS")
+    EnsFeatureIDsChrY <- readRDS("Data/GenomicFeatures/EnsFeatureIDsChrY.RDS")
 }
 
 ###########################################################################
@@ -541,7 +541,7 @@ if (.RERUN) {
     EnsFlanksRn6ByGene <- lapply(c(50, 100, 250, 500, 1000, 1500, 2000, 2500), function(d) Genome$getTSSFlanksFromTxGRs(EnsFeatures[["Transcript"]][["rat"]], width = d, both = TRUE))
     names(EnsFlanksRn6ByGene) <- paste("Flank", c("100", "200", "500", "1k", "2k", "3k", "4k", "5k"), sep = "")
     EnsFlanksByGene <- list(human = EnsFlanksHg38ByGene, mouse = EnsFlanksMm10ByGene, rat = EnsFlanksRn6ByGene)
-    saveRDS(EnsFlanksByGene, file = "Data/release/GenomicFeatures/EnsFlanksByGene.RDS")
+    saveRDS(EnsFlanksByGene, file = "Data/GenomicFeatures/EnsFlanksByGene.RDS")
 } else {
-    EnsFlanksByGene <- readRDS("Data/release/GenomicFeatures/EnsFlanksByGene.RDS")
+    EnsFlanksByGene <- readRDS("Data/GenomicFeatures/EnsFlanksByGene.RDS")
 }

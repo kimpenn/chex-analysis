@@ -8,7 +8,7 @@
 ## License, v. 2.0. If a copy of the MPL was not distributed with this
 ## file, You can obtain one at http://mozilla.org/MPL/2.0/.
 ###########################################################################
-source("Source/release/functions.R")
+source("Source/functions.R")
 
 .RERUN.K562GRORNA <- FALSE
 .RERUN.K562RNARNA <- FALSE
@@ -22,39 +22,39 @@ if (.RERUN.K562GRORNA) {
     K562GROExonCnts <- read.csv("Data/GSE60454/analyzed/Sample_GSM1480325/verseNoSplice_s1/Sample_GSM1480325.verse.exon.txt", row.names = 1, as.is = TRUE, sep = "\t")
     K562GROIntronCnts <- read.csv("Data/GSE60454/analyzed/Sample_GSM1480325/verseNoSplice_s1/Sample_GSM1480325.verse.intron-lev1-lev2.txt", row.names = 1, as.is = TRUE, sep = "\t")
     K562GROGeneCnts <- Stats$AddMatRows(K562GROExonCnts, K562GROIntronCnts)
-    write.csv(K562GROExonCnts, file = gzfile("Report/release/Transcriptome/K562GROExonCnts.csv.gz"))
-    write.csv(K562GROIntronCnts, file = gzfile("Report/release/Transcriptome/K562GROIntronCnts.csv.gz"))
-    write.csv(K562GROGeneCnts, file = gzfile("Report/release/Transcriptome/K562GROGeneCnts.csv.gz"))
+    write.csv(K562GROExonCnts, file = gzfile("Report/Transcriptome/K562GROExonCnts.csv.gz"))
+    write.csv(K562GROIntronCnts, file = gzfile("Report/Transcriptome/K562GROIntronCnts.csv.gz"))
+    write.csv(K562GROGeneCnts, file = gzfile("Report/Transcriptome/K562GROGeneCnts.csv.gz"))
 } else {
-    K562GROExonCnts <- read.csv("Report/release/Transcriptome/K562GROExonCnts.csv.gz", as.is = TRUE, check.names = FALSE, row.names = 1)
-    K562GROIntronCnts <- read.csv("Report/release/Transcriptome/K562GROIntronCnts.csv.gz", as.is = TRUE, check.names = FALSE, row.names = 1)
-    K562GROGeneCnts <- read.csv("Report/release/Transcriptome/K562GROGeneCnts.csv.gz", as.is = TRUE, check.names = FALSE, row.names = 1)
+    K562GROExonCnts <- read.csv("Report/Transcriptome/K562GROExonCnts.csv.gz", as.is = TRUE, check.names = FALSE, row.names = 1)
+    K562GROIntronCnts <- read.csv("Report/Transcriptome/K562GROIntronCnts.csv.gz", as.is = TRUE, check.names = FALSE, row.names = 1)
+    K562GROGeneCnts <- read.csv("Report/Transcriptome/K562GROGeneCnts.csv.gz", as.is = TRUE, check.names = FALSE, row.names = 1)
 }
 K562GROExonExprs <- log2(1 + K562GROExonCnts)
 K562GROIntronExprs <- log2(1 + K562GROIntronCnts)
 K562GROGeneExprs <- log2(1 + K562GROGeneCnts)
-saveRDS(K562GROExonExprs, file = "Data/release/Transcriptome/K562GROExonExprs.RDS")
-saveRDS(K562GROIntronExprs, file = "Data/release/Transcriptome/K562GROIntronExprs.RDS")
-saveRDS(K562GROGeneExprs, file = "Data/release/Transcriptome/K562GROGeneExprs.RDS")
+saveRDS(K562GROExonExprs, file = "Data/Transcriptome/K562GROExonExprs.RDS")
+saveRDS(K562GROIntronExprs, file = "Data/Transcriptome/K562GROIntronExprs.RDS")
+saveRDS(K562GROGeneExprs, file = "Data/Transcriptome/K562GROGeneExprs.RDS")
 
 if (.RERUN.K562RNARNA) {
     K562RNAExonCnts <- read.csv("Data/GSE32213/analyzed/Sample_GSM798057/verse/Sample_GSM798057.verse.exon.cnts.txt", row.names = 1, as.is = TRUE, sep = "\t")
     K562RNAIntronCnts <- read.csv("Data/GSE32213/analyzed/Sample_GSM798057/verse/Sample_GSM798057.verse.intron-lev1-lev2.cnts.txt", row.names = 1, as.is = TRUE, sep = "\t")
     K562RNAGeneCnts <- Stats$AddMatRows(K562RNAExonCnts, K562RNAIntronCnts)
-    write.csv(K562RNAExonCnts, file = gzfile("Report/release/Transcriptome/K562RNAExonCnts.csv.gz"))
-    write.csv(K562RNAIntronCnts, file = gzfile("Report/release/Transcriptome/K562RNAIntronCnts.csv.gz"))
-    write.csv(K562RNAGeneCnts, file = gzfile("Report/release/Transcriptome/K562RNAGeneCnts.csv.gz"))
+    write.csv(K562RNAExonCnts, file = gzfile("Report/Transcriptome/K562RNAExonCnts.csv.gz"))
+    write.csv(K562RNAIntronCnts, file = gzfile("Report/Transcriptome/K562RNAIntronCnts.csv.gz"))
+    write.csv(K562RNAGeneCnts, file = gzfile("Report/Transcriptome/K562RNAGeneCnts.csv.gz"))
 } else {
-    K562RNAExonCnts <- read.csv("Report/release/Transcriptome/K562RNAExonCnts.csv.gz", as.is = TRUE, check.names = FALSE, row.names = 1)
-    K562RNAIntronCnts <- read.csv("Report/release/Transcriptome/K562RNAIntronCnts.csv.gz", as.is = TRUE, check.names = FALSE, row.names = 1)
-    K562RNAGeneCnts <- read.csv("Report/release/Transcriptome/K562RNAGeneCnts.csv.gz", as.is = TRUE, check.names = FALSE, row.names = 1)
+    K562RNAExonCnts <- read.csv("Report/Transcriptome/K562RNAExonCnts.csv.gz", as.is = TRUE, check.names = FALSE, row.names = 1)
+    K562RNAIntronCnts <- read.csv("Report/Transcriptome/K562RNAIntronCnts.csv.gz", as.is = TRUE, check.names = FALSE, row.names = 1)
+    K562RNAGeneCnts <- read.csv("Report/Transcriptome/K562RNAGeneCnts.csv.gz", as.is = TRUE, check.names = FALSE, row.names = 1)
 }
 K562RNAExonExprs <- log2(1 + K562RNAExonCnts)
 K562RNAIntronExprs <- log2(1 + K562RNAIntronCnts)
 K562RNAGeneExprs <- log2(1 + K562RNAGeneCnts)
-saveRDS(K562RNAExonExprs, file = "Data/release/Transcriptome/K562RNAExonExprs.RDS")
-saveRDS(K562RNAIntronExprs, file = "Data/release/Transcriptome/K562RNAIntronExprs.RDS")
-saveRDS(K562RNAGeneExprs, file = "Data/release/Transcriptome/K562RNAGeneExprs.RDS")
+saveRDS(K562RNAExonExprs, file = "Data/Transcriptome/K562RNAExonExprs.RDS")
+saveRDS(K562RNAIntronExprs, file = "Data/Transcriptome/K562RNAIntronExprs.RDS")
+saveRDS(K562RNAGeneExprs, file = "Data/Transcriptome/K562RNAGeneExprs.RDS")
 
 ## K562 single-cell expression from Perturb-seq, but it seems the wild-type cells are not contained in the downloaded raw data (10X BAM file).
 ## so we have to use the GEO wild-type expression matrix, which contains exonic counts only. 
@@ -70,15 +70,15 @@ if (.RERUN.K562scRNA) {
     K563scRNAExonCntsSummarized <- Stats$summarizeMatrix(K562scRNAExonCnts, by = geneSymbols, FUN = "mean", ncores = 12)
     K562scRNAExonCntsSummarized <- round(K562scRNAExonCntsSummarized)
     class(K562scRNAExonCntsSummarized) <- "integer"
-    write.csv(K562scRNAExonCntsSummarized, file = gzfile("Report/release/Transcriptome/K562scRNAExonCntsSummarized.csv.gz"))
+    write.csv(K562scRNAExonCntsSummarized, file = gzfile("Report/Transcriptome/K562scRNAExonCntsSummarized.csv.gz"))
 } else {
-    K562scRNAExonCntsSummarized <- read.csv("Report/release/Transcriptome/K562scRNAExonCntsSummarized.csv.gz", row.names = 1, as.is = TRUE, check.names = FALSE)
+    K562scRNAExonCntsSummarized <- read.csv("Report/Transcriptome/K562scRNAExonCntsSummarized.csv.gz", row.names = 1, as.is = TRUE, check.names = FALSE)
 }
 K562scRNAGeneCntsSummarized <- K562scRNAExonCntsSummarized
 K562scRNAExonExprs <- log2(1 + NGS$RLE2(K562scRNAExonCntsSummarized, threshold = 0.7))
 K562scRNAGeneExprs <- K562scRNAExonExprs
-saveRDS(K562scRNAExonExprs, file = "Data/release/Transcriptome/K562scRNAExonExprs.RDS")
-saveRDS(K562scRNAGeneExprs, file = "Data/release/Transcriptome/K562scRNAGeneExprs.RDS")
+saveRDS(K562scRNAExonExprs, file = "Data/Transcriptome/K562scRNAExonExprs.RDS")
+saveRDS(K562scRNAGeneExprs, file = "Data/Transcriptome/K562scRNAGeneExprs.RDS")
 
 ###########################################################################
 ## Human brain in-house scRNA
@@ -94,12 +94,12 @@ if (.RERUN.HumanBrainRNA) {
     ## [1] 372
 
     ## Hotfix for neuron and astrocyte labels
-    HumanJennRNAMetadata <- read.csv("Data/release/Transcriptome/BrainSampleIDsFromJenn.csv", as.is = TRUE, check.names = FALSE)
+    HumanJennRNAMetadata <- read.csv("Data/Transcriptome/BrainSampleIDsFromJenn.csv", as.is = TRUE, check.names = FALSE)
     rownames(HumanJennRNAMetadata) <- HumanJennRNAMetadata[, "Sample"]
     HumanJennRNAMetadata <- subset(HumanJennRNAMetadata, `cell type` == "Neurons" | `cell type` == "Astrocytes")
     HumanRepoJennSampleIDs <- intersect(HumanBrainRNAMetadata[, "Sample Name"], HumanJennRNAMetadata[, "Sample"])
     HumanBrainRNAMetadata[HumanRepoJennSampleIDs, "Cell Class"] <- unname(c(Astrocytes = "astrocyte", Neurons = "neuron")[HumanJennRNAMetadata[HumanRepoJennSampleIDs, "cell type"]])
-    write.csv(HumanBrainRNAMetadata, "Report/release/Transcriptome/HumanBrainRNAMetadata_CellTypeFixed.csv", row.names = FALSE)
+    write.csv(HumanBrainRNAMetadata, "Report/Transcriptome/HumanBrainRNAMetadata_CellTypeFixed.csv", row.names = FALSE)
 
     HumanBrainRNASampleIDs_failed_uniqMapPerc <- HumanBrainRNAMetadata[HumanBrainRNAMetadata[, "STAR.Uniq-mapped Perc"] < 70 | is.na(HumanBrainRNAMetadata[, "STAR.Uniq-mapped Perc"]), "Sample Name"] 
     HumanBrainRNASampleIDs_failed_uniqMapReads <- HumanBrainRNAMetadata[HumanBrainRNAMetadata[, "STAR.Uniq-mapped Reads"] < 1e6 | is.na(HumanBrainRNAMetadata[, "STAR.Uniq-mapped Reads"]), "Sample Name"] 
@@ -173,7 +173,7 @@ if (.RERUN.HumanBrainRNA) {
     ## [1] 188
     HumanBrainRNAVerse <- HumanBrainRNAVerse[HumanBrainRNASampleIDs]
     HumanBrainRNAMetadata <- HumanBrainRNAMetadata[HumanBrainRNASampleIDs, ]
-    write.csv(HumanBrainRNAMetadata, file = "Report/release/Transcriptome/HumanBrainRNAMetadata.csv")
+    write.csv(HumanBrainRNAMetadata, file = "Report/Transcriptome/HumanBrainRNAMetadata.csv")
 
     HumanAstroRNASampleIDs <- intersect(HumanAstroRNASampleIDs, HumanBrainRNASampleIDs)
     HumanNeuronRNASampleIDs <- intersect(HumanNeuronRNASampleIDs, HumanBrainRNASampleIDs)
@@ -190,24 +190,24 @@ if (.RERUN.HumanBrainRNA) {
     HumanBrainRNAIntronCnts <- sapply(HumanBrainRNAVerse, function(X) X[["intron-lev1-lev2"]][HumanBrainRNAGIDs$Intron, 1])
     rownames(HumanBrainRNAIntronCnts) <- HumanBrainRNAGIDs[["Intron"]]
 
-    write.csv(HumanBrainRNAExonCnts, file = gzfile("Report/release/Transcriptome/HumanBrainRNAExonCnts_withSpikein.csv.gz"))
-    write.csv(HumanBrainRNAIntronCnts, file = gzfile("Report/release/Transcriptome/HumanBrainRNAIntronCnts.csv.gz"))
+    write.csv(HumanBrainRNAExonCnts, file = gzfile("Report/Transcriptome/HumanBrainRNAExonCnts_withSpikein.csv.gz"))
+    write.csv(HumanBrainRNAIntronCnts, file = gzfile("Report/Transcriptome/HumanBrainRNAIntronCnts.csv.gz"))
     HumanBrainRNAGIDs$ExonNoSpikein <- HumanBrainRNAGIDs[["Exon"]][!grepl("^spikeIn", HumanBrainRNAGIDs[["Exon"]])]
     lengths(HumanBrainRNAGIDs)
     ##          Exon        Intron ExonNoSpikein 
     ##         50526         34778         50427 
     HumanBrainRNAExonCnts <- HumanBrainRNAExonCnts[HumanBrainRNAGIDs[["ExonNoSpikein"]], ]
-    write.csv(HumanBrainRNAExonCnts, file = gzfile("Report/release/Transcriptome/HumanBrainRNAExonCnts_noSpikein.csv.gz"))
+    write.csv(HumanBrainRNAExonCnts, file = gzfile("Report/Transcriptome/HumanBrainRNAExonCnts_noSpikein.csv.gz"))
 } else {
-    HumanBrainRNAExonCnts <- read.csv("Report/release/Transcriptome/HumanBrainRNAExonCnts_noSpikein.csv.gz", row.names = 1, as.is = TRUE, check.names = FALSE)
-    HumanBrainRNAIntronCnts <- read.csv("Report/release/Transcriptome/HumanBrainRNAIntronCnts.csv.gz", row.names = 1, as.is = TRUE, check.names = FALSE)
+    HumanBrainRNAExonCnts <- read.csv("Report/Transcriptome/HumanBrainRNAExonCnts_noSpikein.csv.gz", row.names = 1, as.is = TRUE, check.names = FALSE)
+    HumanBrainRNAIntronCnts <- read.csv("Report/Transcriptome/HumanBrainRNAIntronCnts.csv.gz", row.names = 1, as.is = TRUE, check.names = FALSE)
 }
 HumanBrainRNAGeneCnts <- Stats$AddMatRows(HumanBrainRNAExonCnts, HumanBrainRNAIntronCnts)
-write.csv(HumanBrainRNAGeneCnts, file = gzfile("Report/release/Transcriptome/HumanBrainRNAGeneCnts.csv.gz"))
+write.csv(HumanBrainRNAGeneCnts, file = gzfile("Report/Transcriptome/HumanBrainRNAGeneCnts.csv.gz"))
 
 if (.RERUN.HumanBrainRNA) {
     HumanBrainRNASampleIDs <- colnames(HumanBrainRNAExonCnts)
-    HumanBrainRNAMetadata <- read.csv("Report/release/Transcriptome/HumanBrainRNAMetadata_CellTypeFixed.csv", as.is = TRUE, check.names = FALSE)
+    HumanBrainRNAMetadata <- read.csv("Report/Transcriptome/HumanBrainRNAMetadata_CellTypeFixed.csv", as.is = TRUE, check.names = FALSE)
     rownames(HumanBrainRNAMetadata) <- HumanBrainRNAMetadata[, "Sample Name"]
     HumanBrainRNAMetadata <- HumanBrainRNAMetadata[HumanBrainRNASampleIDs, ]
     HumanAstroRNASampleIDs <- subset(HumanBrainRNAMetadata, `Cell Class` == "astrocyte")[, "Sample Name"]
@@ -217,9 +217,9 @@ if (.RERUN.HumanBrainRNA) {
     HumanBrainRNAMitoGIDs <- rownames(HumanBrainRNAMitoVerse[[1]][["mito"]])
     HumanBrainRNAMitoCnts <- sapply(HumanBrainRNAMitoVerse, function(Verse) Verse[["mito"]][HumanBrainRNAMitoGIDs, ])
     rownames(HumanBrainRNAMitoCnts) <- HumanBrainRNAMitoGIDs
-    write.csv(HumanBrainRNAMitoCnts, file = "Report/release/Transcriptome/HumanBrainRNAMitoCnts.csv")
+    write.csv(HumanBrainRNAMitoCnts, file = "Report/Transcriptome/HumanBrainRNAMitoCnts.csv")
 } else {
-    HumanBrainRNAMitoCnts <- read.csv(file = "Report/release/Transcriptome/HumanBrainRNAMitoCnts.csv", row.names = 1, check.names = FALSE, as.is = TRUE)
+    HumanBrainRNAMitoCnts <- read.csv(file = "Report/Transcriptome/HumanBrainRNAMitoCnts.csv", row.names = 1, check.names = FALSE, as.is = TRUE)
 }
 
 ###########################################################################
@@ -267,9 +267,9 @@ if (.RERUN.MouseBrainRNA) {
     MouseBrainRNAExptIDs <- c(MouseAstroRNAExptIDs, MouseNeuronRNAExptIDs)
     MouseBrainRNASampleIDs <- c(MouseAstroRNASampleIDs, MouseNeuronRNASampleIDs)
 
-    cat(MouseBrainRNASampleIDs, file = "Report/release/Transcriptome/MouseBrainRNASampleIDs.txt", sep = ", ")
+    cat(MouseBrainRNASampleIDs, file = "Report/Transcriptome/MouseBrainRNASampleIDs.txt", sep = ", ")
     ## Download from GUI the metadata
-    MouseBrainRNAMetadata <- read.csv("Report/release/Transcriptome/MouseBrainRNAMetadata.xls", as.is = TRUE, check.names = FALSE, sep = "\t")
+    MouseBrainRNAMetadata <- read.csv("Report/Transcriptome/MouseBrainRNAMetadata.xls", as.is = TRUE, check.names = FALSE, sep = "\t")
     rownames(MouseBrainRNAMetadata) <- MouseBrainRNAMetadata[, "Sample Name"]
 
     MouseBrainRNASampleIDs_failed_uniqMapPerc <- MouseBrainRNAMetadata[MouseBrainRNAMetadata[, "STAR.Uniq-mapped Perc"] < 70 | is.na(MouseBrainRNAMetadata[, "STAR.Uniq-mapped Perc"]), "Sample Name"] 
@@ -301,7 +301,7 @@ if (.RERUN.MouseBrainRNA) {
     ##      1 
     ## 408440 
 
-    write.csv(MouseBrainRNAMetadata, file = "Report/release/Transcriptome/MouseBrainRNAMetadata.csv")
+    write.csv(MouseBrainRNAMetadata, file = "Report/Transcriptome/MouseBrainRNAMetadata.csv")
 
     MouseAstroRNASampleIDs <- subset(MouseBrainRNAMetadata, `Cell Class` == "astrocyte")[, "Sample Name"]
     MouseNeuronRNASampleIDs <- subset(MouseBrainRNAMetadata, `Cell Class` == "neuron")[, "Sample Name"]
@@ -323,24 +323,24 @@ if (.RERUN.MouseBrainRNA) {
     MouseBrainRNAIntronCnts <- sapply(MouseBrainRNAVerse, function(X) X[["intron"]][MouseBrainRNAGIDs$Intron, 1])
     rownames(MouseBrainRNAIntronCnts) <- MouseBrainRNAGIDs[["Intron"]]
 
-    write.csv(MouseBrainRNAExonCnts, file = gzfile("Report/release/Transcriptome/MouseBrainRNAExonCnts_withSpikein.csv.gz"))
-    write.csv(MouseBrainRNAIntronCnts, file = gzfile("Report/release/Transcriptome/MouseBrainRNAIntronCnts.csv.gz"))
+    write.csv(MouseBrainRNAExonCnts, file = gzfile("Report/Transcriptome/MouseBrainRNAExonCnts_withSpikein.csv.gz"))
+    write.csv(MouseBrainRNAIntronCnts, file = gzfile("Report/Transcriptome/MouseBrainRNAIntronCnts.csv.gz"))
     MouseBrainRNAGIDs$ExonNoSpikein <- MouseBrainRNAGIDs[["Exon"]][!grepl("^spikeIn", MouseBrainRNAGIDs[["Exon"]])]
     lengths(MouseBrainRNAGIDs)
     ##          Exon        Intron ExonNoSpikein 
     ##         23545         20422         23453
     MouseBrainRNAExonCnts <- MouseBrainRNAExonCnts[MouseBrainRNAGIDs[["ExonNoSpikein"]], ]
-    write.csv(MouseBrainRNAExonCnts, file = gzfile("Report/release/Transcriptome/MouseBrainRNAExonCnts_noSpikein.csv.gz"))
+    write.csv(MouseBrainRNAExonCnts, file = gzfile("Report/Transcriptome/MouseBrainRNAExonCnts_noSpikein.csv.gz"))
 } else {
-    MouseBrainRNAExonCnts <- read.csv("Report/release/Transcriptome/MouseBrainRNAExonCnts_noSpikein.csv.gz", row.names = 1, as.is = TRUE, check.names = FALSE)
-    MouseBrainRNAIntronCnts <- read.csv("Report/release/Transcriptome/MouseBrainRNAIntronCnts.csv.gz", row.names = 1, as.is = TRUE, check.names = FALSE)
+    MouseBrainRNAExonCnts <- read.csv("Report/Transcriptome/MouseBrainRNAExonCnts_noSpikein.csv.gz", row.names = 1, as.is = TRUE, check.names = FALSE)
+    MouseBrainRNAIntronCnts <- read.csv("Report/Transcriptome/MouseBrainRNAIntronCnts.csv.gz", row.names = 1, as.is = TRUE, check.names = FALSE)
 }
 MouseBrainRNAGeneCnts <- Stats$AddMatRows(MouseBrainRNAExonCnts, MouseBrainRNAIntronCnts)
-write.csv(MouseBrainRNAGeneCnts, file = gzfile("Report/release/Transcriptome/MouseBrainRNAGeneCnts.csv.gz"))
+write.csv(MouseBrainRNAGeneCnts, file = gzfile("Report/Transcriptome/MouseBrainRNAGeneCnts.csv.gz"))
 
 if (.RERUN.MouseBrainRNA) {
     MouseBrainRNASampleIDs <- colnames(MouseBrainRNAExonCnts)
-    MouseBrainRNAMetadata <- read.csv("Report/release/Transcriptome/MouseBrainRNAMetadata.csv", as.is = TRUE, check.names = FALSE)
+    MouseBrainRNAMetadata <- read.csv("Report/Transcriptome/MouseBrainRNAMetadata.csv", as.is = TRUE, check.names = FALSE)
     rownames(MouseBrainRNAMetadata) <- MouseBrainRNAMetadata[, "Sample Name"]
     MouseBrainRNAMetadata <- MouseBrainRNAMetadata[MouseBrainRNASampleIDs, ]
     MouseAstroRNASampleIDs <- subset(MouseBrainRNAMetadata, `Cell Class` == "astrocyte")[, "Sample Name"]
@@ -350,19 +350,19 @@ if (.RERUN.MouseBrainRNA) {
     MouseBrainRNAMitoGIDs <- rownames(MouseBrainRNAMitoVerse[[1]][["mito"]])
     MouseBrainRNAMitoCnts <- sapply(MouseBrainRNAMitoVerse, function(Verse) Verse[["mito"]][MouseBrainRNAMitoGIDs, ])
     rownames(MouseBrainRNAMitoCnts) <- MouseBrainRNAMitoGIDs
-    write.csv(MouseBrainRNAMitoCnts, file = "Report/release/Transcriptome/MouseBrainRNAMitoCnts.csv")
+    write.csv(MouseBrainRNAMitoCnts, file = "Report/Transcriptome/MouseBrainRNAMitoCnts.csv")
 } else {
-    MouseBrainRNAMitoCnts <- read.csv(file = "Report/release/Transcriptome/MouseBrainRNAMitoCnts.csv", row.names = 1, check.names = FALSE, as.is = TRUE)
+    MouseBrainRNAMitoCnts <- read.csv(file = "Report/Transcriptome/MouseBrainRNAMitoCnts.csv", row.names = 1, check.names = FALSE, as.is = TRUE)
 }
 
 
 if (.RERUN.MouseInterneuronRNA) {
     ## Download from GUI the metadata
-    MouseInterneuronRNAMetadata <- read.csv("Data/release/Transcriptome/MouseInterneuronRNASampleMetadata.xls", as.is = TRUE, check.names = FALSE, sep = "\t")
+    MouseInterneuronRNAMetadata <- read.csv("Data/Transcriptome/MouseInterneuronRNASampleMetadata.xls", as.is = TRUE, check.names = FALSE, sep = "\t")
     rownames(MouseInterneuronRNAMetadata) <- MouseInterneuronRNAMetadata[, "Sample Name"]
     MouseInterneuronRNASampleIDs <- MouseInterneuronRNAMetadata[, "Sample Name"]
     MouseInterneuronRNAExptIDs <- MouseInterneuronRNAMetadata[, "Experiment Name"]
-    cat(MouseInterneuronRNASampleIDs, file = "Data/release/Transcriptome/MouseInterneuronRNASampleIDs.txt", sep = ",")
+    cat(MouseInterneuronRNASampleIDs, file = "Data/Transcriptome/MouseInterneuronRNASampleIDs.txt", sep = ",")
     ## Because the old metadata lacks some important stats (e.g. mismatch rate per base), we need to run our procedure.
     MouseInterneuronRNAMetadata1 <- as.data.frame(t(sapply(MouseInterneuronRNASampleIDs, function(SID) { Repo$getNGSstats(exptID = MouseInterneuronRNAMetadata[SID, "Experiment Name"], sampleID = SID, features = c("exon", "intron", "mito", "intergenic", "lines_sines")) })), check.names = FALSE, stringsAsFactors = FALSE)
     MouseInterneuronRNAMetadata[["STAR.Perc Bases Mismatched"]] <- as.numeric(MouseInterneuronRNAMetadata1[["STAR.Mismatch-per-base Perc"]])
@@ -378,12 +378,12 @@ if (.RERUN.MouseInterneuronRNA) {
     MouseInterneuronRNASampleIDs_failed <- Reduce(union, list(MouseInterneuronRNASampleIDs_failed_uniqMapPerc, MouseInterneuronRNASampleIDs_failed_uniqMapReads, MouseInterneuronRNASampleIDs_failed_mismatchPerc, MouseInterneuronRNASampleIDs_failed_spikeinPerc, MouseInterneuronRNASampleIDs_failed_mitoPerc, MouseInterneuronRNASampleIDs_failed_exonPerc))
     length(MouseInterneuronRNASampleIDs_failed)
     ## [1] 15
-    cat(MouseInterneuronRNASampleIDs_failed, file = "Report/release/Transcriptome/MouseInterneuronRNASampleIDs_failed.txt", sep = "\n")
+    cat(MouseInterneuronRNASampleIDs_failed, file = "Report/Transcriptome/MouseInterneuronRNASampleIDs_failed.txt", sep = "\n")
     MouseInterneuronRNASampleIDs <- setdiff(MouseInterneuronRNASampleIDs, MouseInterneuronRNASampleIDs_failed)
     length(MouseInterneuronRNASampleIDs)
     ## [1] 8
     MouseInterneuronRNAMetadata <- MouseInterneuronRNAMetadata[MouseInterneuronRNASampleIDs, ]
-    write.csv(MouseInterneuronRNAMetadata, file = "Report/release/Transcriptome/MouseInterneuronRNAMetadata.csv")
+    write.csv(MouseInterneuronRNAMetadata, file = "Report/Transcriptome/MouseInterneuronRNAMetadata.csv")
 
     ## Read the NGS statistics and GUI metadata
     MouseInterneuronRNAVerse <- sapply(MouseInterneuronRNASampleIDs, function(suid) { Repo$getVERSEcounts(exptName = paste0("E.", MouseInterneuronRNAMetadata[suid, "Experiment Name"]), sampleID = MouseInterneuronRNAMetadata[suid, "Sample Name"], features = c("exon", "intron")) }, simplify = FALSE)
@@ -409,24 +409,24 @@ if (.RERUN.MouseInterneuronRNA) {
     MouseInterneuronRNAIntronCnts <- sapply(MouseInterneuronRNAVerse, function(X) X[["intron"]][MouseInterneuronRNAGIDs$Intron, 1])
     rownames(MouseInterneuronRNAIntronCnts) <- MouseInterneuronRNAGIDs[["Intron"]]
 
-    write.csv(MouseInterneuronRNAExonCnts, file = gzfile("Report/release/Transcriptome/MouseInterneuronRNAExonCnts_withSpikein.csv.gz"))
-    write.csv(MouseInterneuronRNAIntronCnts, file = gzfile("Report/release/Transcriptome/MouseInterneuronRNAIntronCnts.csv.gz"))
+    write.csv(MouseInterneuronRNAExonCnts, file = gzfile("Report/Transcriptome/MouseInterneuronRNAExonCnts_withSpikein.csv.gz"))
+    write.csv(MouseInterneuronRNAIntronCnts, file = gzfile("Report/Transcriptome/MouseInterneuronRNAIntronCnts.csv.gz"))
     MouseInterneuronRNAGIDs$ExonNoSpikein <- MouseInterneuronRNAGIDs[["Exon"]][!grepl("^spikeIn", MouseInterneuronRNAGIDs[["Exon"]])]
     lengths(MouseInterneuronRNAGIDs)
     ##          Exon        Intron ExonNoSpikein 
     ##         23545         20422         23453 
     MouseInterneuronRNAExonCnts <- MouseInterneuronRNAExonCnts[MouseInterneuronRNAGIDs[["ExonNoSpikein"]], ]
-    write.csv(MouseInterneuronRNAExonCnts, file = gzfile("Report/release/Transcriptome/MouseInterneuronRNAExonCnts_noSpikein.csv.gz"))
+    write.csv(MouseInterneuronRNAExonCnts, file = gzfile("Report/Transcriptome/MouseInterneuronRNAExonCnts_noSpikein.csv.gz"))
 } else {
-    MouseInterneuronRNAExonCnts <- read.csv("Report/release/Transcriptome/MouseInterneuronRNAExonCnts_noSpikein.csv.gz", row.names = 1, as.is = TRUE, check.names = FALSE)
-    MouseInterneuronRNAIntronCnts <- read.csv("Report/release/Transcriptome/MouseInterneuronRNAIntronCnts.csv.gz", row.names = 1, as.is = TRUE, check.names = FALSE)
+    MouseInterneuronRNAExonCnts <- read.csv("Report/Transcriptome/MouseInterneuronRNAExonCnts_noSpikein.csv.gz", row.names = 1, as.is = TRUE, check.names = FALSE)
+    MouseInterneuronRNAIntronCnts <- read.csv("Report/Transcriptome/MouseInterneuronRNAIntronCnts.csv.gz", row.names = 1, as.is = TRUE, check.names = FALSE)
 }
 MouseInterneuronRNAGeneCnts <- Stats$AddMatRows(MouseInterneuronRNAExonCnts, MouseInterneuronRNAIntronCnts)
-write.csv(MouseInterneuronRNAGeneCnts, file = gzfile("Report/release/Transcriptome/MouseInterneuronRNAGeneCnts.csv.gz"))
+write.csv(MouseInterneuronRNAGeneCnts, file = gzfile("Report/Transcriptome/MouseInterneuronRNAGeneCnts.csv.gz"))
 
 if (.RERUN.MouseInterneuronRNA) {
     MouseInterneuronRNASampleIDs <- colnames(MouseInterneuronRNAExonCnts)
-    MouseInterneuronRNAMetadata <- read.csv("Report/release/Transcriptome/MouseInterneuronRNAMetadata.csv", as.is = TRUE, check.names = FALSE)
+    MouseInterneuronRNAMetadata <- read.csv("Report/Transcriptome/MouseInterneuronRNAMetadata.csv", as.is = TRUE, check.names = FALSE)
     rownames(MouseInterneuronRNAMetadata) <- MouseInterneuronRNAMetadata[, "Sample Name"]
     MouseInterneuronRNAMetadata <- MouseInterneuronRNAMetadata[MouseInterneuronRNASampleIDs, ]
     table(MouseInterneuronRNAMetadata[["Cell Class"]])
@@ -441,9 +441,9 @@ if (.RERUN.MouseInterneuronRNA) {
     MouseInterneuronRNAMitoGIDs <- rownames(MouseInterneuronRNAMitoVerse[[1]][["mito"]])
     MouseInterneuronRNAMitoCnts <- sapply(MouseInterneuronRNAMitoVerse, function(Verse) Verse[["mito"]][MouseInterneuronRNAMitoGIDs, ])
     rownames(MouseInterneuronRNAMitoCnts) <- MouseInterneuronRNAMitoGIDs
-    write.csv(MouseInterneuronRNAMitoCnts, file = gzfile("Report/release/Transcriptome/MouseInterneuronRNAMitoCnts.csv.gz"))
+    write.csv(MouseInterneuronRNAMitoCnts, file = gzfile("Report/Transcriptome/MouseInterneuronRNAMitoCnts.csv.gz"))
 } else {
-    MouseInterneuronRNAMitoCnts <- read.csv(file = "Report/release/Transcriptome/MouseInterneuronRNAMitoCnts.csv.gz", row.names = 1, check.names = FALSE, as.is = TRUE)
+    MouseInterneuronRNAMitoCnts <- read.csv(file = "Report/Transcriptome/MouseInterneuronRNAMitoCnts.csv.gz", row.names = 1, check.names = FALSE, as.is = TRUE)
 }
 
 ###########################################################################
@@ -460,16 +460,16 @@ MouseInterneuronRNAExonExprs <- log2(1 + NGS$RLE2(MouseInterneuronRNAExonCnts, t
 MouseInterneuronRNAIntronExprs <- log2(1 + NGS$RLE2(MouseInterneuronRNAIntronCnts, threshold = 0.7))
 MouseInterneuronRNAGeneExprs <- log2(1 + NGS$RLE2(MouseInterneuronRNAGeneCnts, threshold = 0.7))
 
-saveRDS(HumanBrainRNAExonExprs, file = "Data/release/Transcriptome/HumanBrainRNAExonExprs.RDS")
-saveRDS(HumanBrainRNAIntronExprs, file = "Data/release/Transcriptome/HumanBrainRNAIntronExprs.RDS")
-saveRDS(HumanBrainRNAGeneExprs, file = "Data/release/Transcriptome/HumanBrainRNAGeneExprs.RDS")
-saveRDS(MouseBrainRNAExonExprs, file = "Data/release/Transcriptome/MouseBrainRNAExonExprs.RDS")
-saveRDS(MouseBrainRNAIntronExprs, file = "Data/release/Transcriptome/MouseBrainRNAIntronExprs.RDS")
-saveRDS(MouseBrainRNAGeneExprs, file = "Data/release/Transcriptome/MouseBrainRNAGeneExprs.RDS")
+saveRDS(HumanBrainRNAExonExprs, file = "Data/Transcriptome/HumanBrainRNAExonExprs.RDS")
+saveRDS(HumanBrainRNAIntronExprs, file = "Data/Transcriptome/HumanBrainRNAIntronExprs.RDS")
+saveRDS(HumanBrainRNAGeneExprs, file = "Data/Transcriptome/HumanBrainRNAGeneExprs.RDS")
+saveRDS(MouseBrainRNAExonExprs, file = "Data/Transcriptome/MouseBrainRNAExonExprs.RDS")
+saveRDS(MouseBrainRNAIntronExprs, file = "Data/Transcriptome/MouseBrainRNAIntronExprs.RDS")
+saveRDS(MouseBrainRNAGeneExprs, file = "Data/Transcriptome/MouseBrainRNAGeneExprs.RDS")
 
-saveRDS(MouseInterneuronRNAExonExprs, file = "Data/release/Transcriptome/MouseInterneuronRNAExonExprs.RDS")
-saveRDS(MouseInterneuronRNAIntronExprs, file = "Data/release/Transcriptome/MouseInterneuronRNAIntronExprs.RDS")
-saveRDS(MouseInterneuronRNAGeneExprs, file = "Data/release/Transcriptome/MouseInterneuronRNAGeneExprs.RDS")
+saveRDS(MouseInterneuronRNAExonExprs, file = "Data/Transcriptome/MouseInterneuronRNAExonExprs.RDS")
+saveRDS(MouseInterneuronRNAIntronExprs, file = "Data/Transcriptome/MouseInterneuronRNAIntronExprs.RDS")
+saveRDS(MouseInterneuronRNAGeneExprs, file = "Data/Transcriptome/MouseInterneuronRNAGeneExprs.RDS")
 
 HumanAstroRNAExonExprs <- HumanBrainRNAExonExprs[,  subset(HumanBrainRNAMetadata[HumanBrainRNASampleIDs, ], `Cell Class` == "astrocyte")[, "Sample Name"]]
 HumanNeuronRNAExonExprs <- HumanBrainRNAExonExprs[,  subset(HumanBrainRNAMetadata[HumanBrainRNASampleIDs, ], `Cell Class` == "neuron")[, "Sample Name"]]
@@ -484,15 +484,15 @@ HumanNeuronRNAGeneExprs <- HumanBrainRNAGeneExprs[,  subset(HumanBrainRNAMetadat
 MouseAstroRNAGeneExprs <- MouseBrainRNAGeneExprs[,  subset(MouseBrainRNAMetadata[MouseBrainRNASampleIDs, ], `Cell Class` == "astrocyte")[, "Sample Name"]]
 MouseNeuronRNAGeneExprs <- MouseBrainRNAGeneExprs[,  subset(MouseBrainRNAMetadata[MouseBrainRNASampleIDs, ], `Cell Class` == "neuron")[, "Sample Name"]]
 
-saveRDS(HumanAstroRNAExonExprs, file = "Data/release/Transcriptome/HumanAstroRNAExonExprs.RDS")
-saveRDS(HumanNeuronRNAExonExprs, file = "Data/release/Transcriptome/HumanNeuronRNAExonExprs.RDS")
-saveRDS(MouseAstroRNAExonExprs, file = "Data/release/Transcriptome/MouseAstroRNAExonExprs.RDS")
-saveRDS(MouseNeuronRNAExonExprs, file = "Data/release/Transcriptome/MouseNeuronRNAExonExprs.RDS")
-saveRDS(HumanAstroRNAIntronExprs, file = "Data/release/Transcriptome/HumanAstroRNAIntronExprs.RDS")
-saveRDS(HumanNeuronRNAIntronExprs, file = "Data/release/Transcriptome/HumanNeuronRNAIntronExprs.RDS")
-saveRDS(MouseAstroRNAIntronExprs, file = "Data/release/Transcriptome/MouseAstroRNAIntronExprs.RDS")
-saveRDS(MouseNeuronRNAIntronExprs, file = "Data/release/Transcriptome/MouseNeuronRNAIntronExprs.RDS")
-saveRDS(HumanAstroRNAGeneExprs, file = "Data/release/Transcriptome/HumanAstroRNAGeneExprs.RDS")
-saveRDS(HumanNeuronRNAGeneExprs, file = "Data/release/Transcriptome/HumanNeuronRNAGeneExprs.RDS")
-saveRDS(MouseAstroRNAGeneExprs, file = "Data/release/Transcriptome/MouseAstroRNAGeneExprs.RDS")
-saveRDS(MouseNeuronRNAGeneExprs, file = "Data/release/Transcriptome/MouseNeuronRNAGeneExprs.RDS")
+saveRDS(HumanAstroRNAExonExprs, file = "Data/Transcriptome/HumanAstroRNAExonExprs.RDS")
+saveRDS(HumanNeuronRNAExonExprs, file = "Data/Transcriptome/HumanNeuronRNAExonExprs.RDS")
+saveRDS(MouseAstroRNAExonExprs, file = "Data/Transcriptome/MouseAstroRNAExonExprs.RDS")
+saveRDS(MouseNeuronRNAExonExprs, file = "Data/Transcriptome/MouseNeuronRNAExonExprs.RDS")
+saveRDS(HumanAstroRNAIntronExprs, file = "Data/Transcriptome/HumanAstroRNAIntronExprs.RDS")
+saveRDS(HumanNeuronRNAIntronExprs, file = "Data/Transcriptome/HumanNeuronRNAIntronExprs.RDS")
+saveRDS(MouseAstroRNAIntronExprs, file = "Data/Transcriptome/MouseAstroRNAIntronExprs.RDS")
+saveRDS(MouseNeuronRNAIntronExprs, file = "Data/Transcriptome/MouseNeuronRNAIntronExprs.RDS")
+saveRDS(HumanAstroRNAGeneExprs, file = "Data/Transcriptome/HumanAstroRNAGeneExprs.RDS")
+saveRDS(HumanNeuronRNAGeneExprs, file = "Data/Transcriptome/HumanNeuronRNAGeneExprs.RDS")
+saveRDS(MouseAstroRNAGeneExprs, file = "Data/Transcriptome/MouseAstroRNAGeneExprs.RDS")
+saveRDS(MouseNeuronRNAGeneExprs, file = "Data/Transcriptome/MouseNeuronRNAGeneExprs.RDS")

@@ -8,21 +8,21 @@
 ## License, v. 2.0. If a copy of the MPL was not distributed with this
 ## file, You can obtain one at http://mozilla.org/MPL/2.0/.
 ###########################################################################
-source("Source/release/functions.R")
+source("Source/functions.R")
 .ISONLINE <- Tools$is_online()
 .PWD <- ifelse(.ISONLINE, "~/Workspace.cache/Chex-seq", ".")
 
-EnsFeatures <- readRDS("Data/release/GenomicFeatures/EnsFeatures.RDS")
-FeatureIDsMainNoMY <- readRDS("Data/release/GenomicFeatures/FeatureIDsMainNoMY.RDS")
-UCSCCpGIslands <- readRDS("Data/release/GenomicFeatures/UCSCCpGIslands.RDS")
+EnsFeatures <- readRDS("Data/GenomicFeatures/EnsFeatures.RDS")
+FeatureIDsMainNoMY <- readRDS("Data/GenomicFeatures/FeatureIDsMainNoMY.RDS")
+UCSCCpGIslands <- readRDS("Data/GenomicFeatures/UCSCCpGIslands.RDS")
 
-SampleInfoFull <- read.csv("Data/release/SampleInfoFull20201221CV2b.csv", as.is = TRUE, check.names = FALSE)
+SampleInfoFull <- read.csv("Data/SampleInfoFull20201221CV2b.csv", as.is = TRUE, check.names = FALSE)
 sampleIDsFull <- rownames(SampleInfoFull) <- SampleInfoFull[["SampleID"]]
 SampleInfo <- subset(SampleInfoFull, CompType == "Biol")
 sampleIDs <- SampleInfo[, "SampleID"]
 
 ## Load raw priming rate data after mouse filtered
-GRsABreadCmate5End <- readRDS("Data/release/PrimingRate/GRsABreadCmate5EndFiltered_ge20_le0.1_strict.RDS")
+GRsABreadCmate5End <- readRDS("Data/PrimingRate/GRsABreadCmate5EndFiltered_ge20_le0.1_strict.RDS")
 ## Extend 1kb toward both sides (so that the point becomes 2kb region)
 GRsABreadCmate5EndExt <- lapply(GRsABreadCmate5End, function(GRs) flank(GRs, width = 1000, start = TRUE, both = TRUE))
 CvgsABreadCmate5EndExt <- lapply(GRsABreadCmate5EndExt, function(GRs) coverage(GRs))
@@ -78,9 +78,9 @@ for (i in (1:nrow(CvgsPerFeatureConfig))[10:15]) {
             features <- unique(unlist(features))
         }
         if (extType == "point") {
-            outDir <- sprintf("%s/Report/release/Profiles/CvgsABreadCmate5EndExtFilteredPer%s_Up%sDn%snbinsUp%snbinsDn%s", .PWD, featureTypeLab, upstreamLab, downstreamLab, nbinsUpstream, nbinsDownstream)
+            outDir <- sprintf("%s/Report/Profiles/CvgsABreadCmate5EndExtFilteredPer%s_Up%sDn%snbinsUp%snbinsDn%s", .PWD, featureTypeLab, upstreamLab, downstreamLab, nbinsUpstream, nbinsDownstream)
         } else {
-            outDir <- sprintf("%s/Report/release/Profiles/CvgsABreadCmate5EndExtFilteredPer%s_Up%sDn%snbinsUp%snbinsDn%snbinsBody%s", .PWD, featureTypeLab, upstreamLab, downstreamLab, nbinsUpstream, nbinsDownstream, nbinsBody)
+            outDir <- sprintf("%s/Report/Profiles/CvgsABreadCmate5EndExtFilteredPer%s_Up%sDn%snbinsUp%snbinsDn%snbinsBody%s", .PWD, featureTypeLab, upstreamLab, downstreamLab, nbinsUpstream, nbinsDownstream, nbinsBody)
         }
         dir.create(outDir, FALSE, TRUE)
         outFilename <- sprintf("%s/Sample_%s.csv.gz", outDir, sampleID)
@@ -113,13 +113,13 @@ for (i in (1:nrow(CvgsPerFeatureConfig))[10:15]) {
     n <- config[["ncores"]]
     mclapply(sampleIDs, function(sampleID) {
         if (extType == "point") {
-            inDir <- sprintf("%s/Report/release/Profiles/CvgsABreadCmate5EndExtFilteredPer%s_Up%sDn%snbinsUp%snbinsDn%s", .PWD, featureTypeLab, upstreamLab, downstreamLab, nbinsUpstream, nbinsDownstream)
-            AvgDir <- sprintf("%s/Report/release/Profiles/CvgsABreadCmate5EndExtFilteredAvg%sMainNoMY_Up%sDn%snbinsUp%snbinsDn%s", .PWD, featureTypeLab, upstreamLab, downstreamLab, nbinsUpstream, nbinsDownstream)
-            SEMDir <- sprintf("%s/Report/release/Profiles/CvgsABreadCmate5EndExtFilteredSEM%sMainNoMY_Up%sDn%snbinsUp%snbinsDn%s", .PWD, featureTypeLab, upstreamLab, downstreamLab, nbinsUpstream, nbinsDownstream)
+            inDir <- sprintf("%s/Report/Profiles/CvgsABreadCmate5EndExtFilteredPer%s_Up%sDn%snbinsUp%snbinsDn%s", .PWD, featureTypeLab, upstreamLab, downstreamLab, nbinsUpstream, nbinsDownstream)
+            AvgDir <- sprintf("%s/Report/Profiles/CvgsABreadCmate5EndExtFilteredAvg%sMainNoMY_Up%sDn%snbinsUp%snbinsDn%s", .PWD, featureTypeLab, upstreamLab, downstreamLab, nbinsUpstream, nbinsDownstream)
+            SEMDir <- sprintf("%s/Report/Profiles/CvgsABreadCmate5EndExtFilteredSEM%sMainNoMY_Up%sDn%snbinsUp%snbinsDn%s", .PWD, featureTypeLab, upstreamLab, downstreamLab, nbinsUpstream, nbinsDownstream)
         } else {
-            inDir <- sprintf("%s/Report/release/Profiles/CvgsABreadCmate5EndExtFilteredPer%s_Up%sDn%snbinsUp%snbinsDn%snbinsBody%s", .PWD, featureTypeLab, upstreamLab, downstreamLab, nbinsUpstream, nbinsDownstream, nbinsBody)
-            AvgDir <- sprintf("%s/Report/release/Profiles/CvgsABreadCmate5EndExtFilteredAvg%sMainNoMY_Up%sDn%snbinsUp%snbinsDn%snbinsBody%s", .PWD, featureTypeLab, upstreamLab, downstreamLab, nbinsUpstream, nbinsDownstream, nbinsBody)
-            SEMDir <- sprintf("%s/Report/release/Profiles/CvgsABreadCmate5EndExtFilteredSEM%sMainNoMY_Up%sDn%snbinsUp%snbinsDn%snbinsBody%s", .PWD, featureTypeLab, upstreamLab, downstreamLab, nbinsUpstream, nbinsDownstream, nbinsBody)
+            inDir <- sprintf("%s/Report/Profiles/CvgsABreadCmate5EndExtFilteredPer%s_Up%sDn%snbinsUp%snbinsDn%snbinsBody%s", .PWD, featureTypeLab, upstreamLab, downstreamLab, nbinsUpstream, nbinsDownstream, nbinsBody)
+            AvgDir <- sprintf("%s/Report/Profiles/CvgsABreadCmate5EndExtFilteredAvg%sMainNoMY_Up%sDn%snbinsUp%snbinsDn%snbinsBody%s", .PWD, featureTypeLab, upstreamLab, downstreamLab, nbinsUpstream, nbinsDownstream, nbinsBody)
+            SEMDir <- sprintf("%s/Report/Profiles/CvgsABreadCmate5EndExtFilteredSEM%sMainNoMY_Up%sDn%snbinsUp%snbinsDn%snbinsBody%s", .PWD, featureTypeLab, upstreamLab, downstreamLab, nbinsUpstream, nbinsDownstream, nbinsBody)
         }
         dir.create(AvgDir, FALSE, TRUE)
         dir.create(SEMDir, FALSE, TRUE)
@@ -159,13 +159,13 @@ for (i in (1:nrow(CvgsPerFeatureConfig))[10:15]) {
     downstreamLab <- config[["downstreamLab"]]
     featureIDsMainNoMY <- config[["FeatureIDsMainNoMY"]]
     ncores <- config[["ncores"]]
-    outDir <- sprintf("%s/Report/release/Profiles", .PWD)
+    outDir <- sprintf("%s/Report/Profiles", .PWD)
     if (extType == "point") {
-        AvgDir <- sprintf("%s/Report/release/Profiles/CvgsABreadCmate5EndExtFilteredAvg%sMainNoMY_Up%sDn%snbinsUp%snbinsDn%s", .PWD, featureTypeLab, upstreamLab, downstreamLab, nbinsUpstream, nbinsDownstream)
-        SEMDir <- sprintf("%s/Report/release/Profiles/CvgsABreadCmate5EndExtFilteredSEM%sMainNoMY_Up%sDn%snbinsUp%snbinsDn%s", .PWD, featureTypeLab, upstreamLab, downstreamLab, nbinsUpstream, nbinsDownstream)
+        AvgDir <- sprintf("%s/Report/Profiles/CvgsABreadCmate5EndExtFilteredAvg%sMainNoMY_Up%sDn%snbinsUp%snbinsDn%s", .PWD, featureTypeLab, upstreamLab, downstreamLab, nbinsUpstream, nbinsDownstream)
+        SEMDir <- sprintf("%s/Report/Profiles/CvgsABreadCmate5EndExtFilteredSEM%sMainNoMY_Up%sDn%snbinsUp%snbinsDn%s", .PWD, featureTypeLab, upstreamLab, downstreamLab, nbinsUpstream, nbinsDownstream)
     } else {
-        AvgDir <- sprintf("%s/Report/release/Profiles/CvgsABreadCmate5EndExtFilteredAvg%sMainNoMY_Up%sDn%snbinsUp%snbinsDn%snbinsBody%s", .PWD, featureTypeLab, upstreamLab, downstreamLab, nbinsUpstream, nbinsDownstream, nbinsBody)
-        SEMDir <- sprintf("%s/Report/release/Profiles/CvgsABreadCmate5EndExtFilteredSEM%sMainNoMY_Up%sDn%snbinsUp%snbinsDn%snbinsBody%s", .PWD, featureTypeLab, upstreamLab, downstreamLab, nbinsUpstream, nbinsDownstream, nbinsBody)
+        AvgDir <- sprintf("%s/Report/Profiles/CvgsABreadCmate5EndExtFilteredAvg%sMainNoMY_Up%sDn%snbinsUp%snbinsDn%snbinsBody%s", .PWD, featureTypeLab, upstreamLab, downstreamLab, nbinsUpstream, nbinsDownstream, nbinsBody)
+        SEMDir <- sprintf("%s/Report/Profiles/CvgsABreadCmate5EndExtFilteredSEM%sMainNoMY_Up%sDn%snbinsUp%snbinsDn%snbinsBody%s", .PWD, featureTypeLab, upstreamLab, downstreamLab, nbinsUpstream, nbinsDownstream, nbinsBody)
     }
     AvgSEM <- lapply(sampleIDs, function(sampleID) {
         AvgFilename <- sprintf("%s/Sample_%s.csv.gz", AvgDir, sampleID)

@@ -8,15 +8,15 @@
 ## License, v. 2.0. If a copy of the MPL was not distributed with this
 ## file, You can obtain one at http://mozilla.org/MPL/2.0/.
 ###########################################################################
-source("Source/release/functions.R")
+source("Source/functions.R")
 
 .ISONLINE <- Tools$is_online()
 .PWD <- ifelse(.ISONLINE, "~/Workspace.cache/Chex-seq", ".")
-EnsFeatures <- readRDS("Data/release/GenomicFeatures/EnsFeatures.RDS")
-EnsFlanksByGene <- readRDS("Data/release/GenomicFeatures/EnsFlanksByGene.RDS")
+EnsFeatures <- readRDS("Data/GenomicFeatures/EnsFeatures.RDS")
+EnsFlanksByGene <- readRDS("Data/GenomicFeatures/EnsFlanksByGene.RDS")
 
 ## Load grouping information
-SampleInfo <- read.csv("Data/release/SampleInfo20201221CV2b.csv", as.is = TRUE, check.names = FALSE)
+SampleInfo <- read.csv("Data/SampleInfo20201221CV2b.csv", as.is = TRUE, check.names = FALSE)
 rownames(SampleInfo) <- sampleIDs <- SampleInfo[, "SampleID"]
 
 Species <- c("human", "mouse", "rat")
@@ -51,7 +51,7 @@ qualOutInPairs <- c( "ABreadCmate5End", "ABread5End", "Aread5End", "Bread5End", 
 for (i in seq_along(mapqThs)) {
     mapqTh <- mapqThs[i]
     for (qualOutInPair in qualOutInPairs) {
-        filename <- sprintf("Data/release/PrimingRate/GRs%sFiltered_%s.RDS", qualOutInPair, mapqTh)
+        filename <- sprintf("Data/PrimingRate/GRs%sFiltered_%s.RDS", qualOutInPair, mapqTh)
         message(filename)
         GRs <- readRDS(filename)
         PFs <- sapply(Species, function(species) { 
@@ -60,7 +60,7 @@ for (i in seq_along(mapqThs)) {
             SIDs <- subset(SampleInfo, Species == species)[, "SampleID"]
             Genome$getPrimingRatesPerFeature(featureRangesList = featuresByGene, featureTypesByGene = featureTypesByGene, GRsList = GRs, sampleIDs = SIDs)
         }, simplify = FALSE) 
-		dirname <- sprintf("%s/Data/release/PrimingRateGene", .PWD)
+		dirname <- sprintf("%s/Data/PrimingRateGene", .PWD)
         dir.create(dirname, FALSE, TRUE)
         filename <- sprintf("%s/PFs%sFilteredEnsID_%s.RDS", dirname, qualOutInPair, mapqTh)
         message(filename)
@@ -73,9 +73,9 @@ flankDistLabs <- paste("Flank", c("100", "200", "500", "1k", "2k", "3k", "4k", "
 for (i in seq_along(mapqThs)) {
     mapqTh <- mapqThs[i]
     for (qualOutInPair in qualOutInPairs) {
-        infile <- sprintf("Data/release/PrimingRate/GRs%sFiltered_%s.RDS", qualOutInPair, mapqTh)
+        infile <- sprintf("Data/PrimingRate/GRs%sFiltered_%s.RDS", qualOutInPair, mapqTh)
         GRs <- readRDS(infile)
-        outfile <- sprintf("Data/release/PrimingRateGene/FlankPFs%sFilteredEnsID_%s.RDS", qualOutInPair, mapqTh)
+        outfile <- sprintf("Data/PrimingRateGene/FlankPFs%sFilteredEnsID_%s.RDS", qualOutInPair, mapqTh)
         FlankPFsEnsID <- sapply(Species, function(species) {
             message(infile, " ", species)
             FlanksByGene <- EnsFlanksByGene[[species]] 
@@ -90,7 +90,7 @@ ncores <- 10
 for (i in seq_along(mapqThs)) {
     mapqTh <- mapqThs[i]
     for (qualOutInPair in qualOutInPairs) {
-        filename <- sprintf("Data/release/PrimingRateGene/PFs%sFilteredEnsID_%s.RDS", qualOutInPair, mapqTh)
+        filename <- sprintf("Data/PrimingRateGene/PFs%sFilteredEnsID_%s.RDS", qualOutInPair, mapqTh)
         message(filename)
         PFsEnsID <- readRDS(filename)
         PFs <- sapply(Species, function(species) {
@@ -102,7 +102,7 @@ for (i in seq_along(mapqThs)) {
                 mat[!idx, ]
             }, simplify = FALSE)
         }, simplify = FALSE)
-		dirname <- sprintf("%s/Data/release/PrimingRateGene", .PWD)
+		dirname <- sprintf("%s/Data/PrimingRateGene", .PWD)
         dir.create(dirname, FALSE, TRUE)
         filename <- sprintf("%s/PFs%sFiltered_%s.RDS", dirname, qualOutInPair, mapqTh)
         message(filename)
@@ -114,7 +114,7 @@ flankDistLabs <- paste("Flank", c("100", "200", "500", "1k", "2k", "3k", "4k", "
 for (i in seq_along(mapqThs)) {
     mapqTh <- mapqThs[i]
     for (qualOutInPair in qualOutInPairs) {
-        infile <- sprintf("Data/release/PrimingRateGene/FlankPFs%sFilteredEnsID_%s.RDS", qualOutInPair, mapqTh)
+        infile <- sprintf("Data/PrimingRateGene/FlankPFs%sFilteredEnsID_%s.RDS", qualOutInPair, mapqTh)
         PFsEnsID <- readRDS(infile)
         PFs <- sapply(Species, function(species) { 
             IDMap <- EnsIDToSymbolMap[[species]]
@@ -127,7 +127,7 @@ for (i in seq_along(mapqThs)) {
                 mat[!idx, ]
             }, simplify = FALSE)
         }, simplify = FALSE)
-		dirname <- sprintf("%s/Data/release/PrimingRateGene", .PWD)
+		dirname <- sprintf("%s/Data/PrimingRateGene", .PWD)
         dir.create(dirname, FALSE, TRUE)
         outfile <- sprintf("%s/FlankPFs%sFiltered_%s.RDS", dirname, qualOutInPair, mapqTh)
         saveRDS(PFs, file = outfile)

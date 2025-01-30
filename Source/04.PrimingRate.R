@@ -8,9 +8,9 @@
 ## License, v. 2.0. If a copy of the MPL was not distributed with this
 ## file, You can obtain one at http://mozilla.org/MPL/2.0/.
 ###########################################################################
-source("Source/release/functions.R")
+source("Source/functions.R")
 
-SampleInfoFull <- read.csv("Data/release/SampleInfoFull20201221CV2b.csv", as.is = TRUE, check.names = FALSE)
+SampleInfoFull <- read.csv("Data/SampleInfoFull20201221CV2b.csv", as.is = TRUE, check.names = FALSE)
 rownames(SampleInfoFull) <- sampleIDsFull <- SampleInfoFull[, "SampleID"]
 sampleIDsVirtual <- subset(SampleInfoFull, CompType == "Virtual")[, "SampleID"]
 SampleInfo <- subset(SampleInfoFull, CompType == "Biol")
@@ -59,7 +59,7 @@ GRsQualOutInPairList <- lapply(1:nrow(QualOutInPairConfig), function(i) {
 })
 names(GRsQualOutInPairList) <- qualOutInPairs
 
-dirname <- "Data/release/PrimingRate"
+dirname <- "Data/PrimingRate"
 dir.create(dirname, FALSE, TRUE)
 for (qualOutInPair in qualOutInPairs) {
     GRs <- GRsQualOutInPairList[[qualOutInPair]]
@@ -71,29 +71,30 @@ for (qualOutInPair in qualOutInPairs) {
 ## Load the data
 GRsQualOutInPairList <- sapply(qualOutInPairs, function(qualOutInPair) {
     message(qualOutInPair)
-    filename <- sprintf("Data/release/PrimingRate/GRs%s.RDS", qualOutInPair)
+    filename <- sprintf("Data/PrimingRate/GRs%s.RDS", qualOutInPair)
     readRDS(filename)
 }, simplify = FALSE)
 
 ## merge Aread5End Bread5End to form ABread5End
-GRsABread5End <- sapply(sampleIDs, function(x) {
-    message(x)
-    c(GRsQualOutInPairList$Aread5End[[x]], 
-      GRsQualOutInPairList$Bread5End[[x]])
-}, simplify = FALSE)
-filename <- sprintf("Data/release/PrimingRate/GRs%s.RDS", "ABread5End")
-saveRDS(GRsABread5End, file = filename)
+# GRsABread5End <- sapply(sampleIDs, function(x) {
+#     message(x)
+#     c(GRsQualOutInPairList$Aread5End[[x]], 
+#       GRsQualOutInPairList$Bread5End[[x]])
+# }, simplify = FALSE)
+# filename <- sprintf("Data/PrimingRate/GRs%s.RDS", "ABread5End")
+# saveRDS(GRsABread5End, file = filename)
 
 ## merge Aread5End Bread5End and Cmate5End to form ABreadCmate5End
-GRsABreadCmate5End <- sapply(sampleIDs, function(x) {
-    message(x)
-    c(GRsQualOutInPairList$Aread5End[[x]], 
-      GRsQualOutInPairList$Bread5End[[x]],
-      GRsQualOutInPairList$Cmate5End[[x]])
-}, simplify = FALSE)
-filename <- sprintf("Data/release/PrimingRate/GRs%s.RDS", "ABreadCmate5End")
-saveRDS(GRsABreadCmate5End, file = filename)
+# GRsABreadCmate5End <- sapply(sampleIDs, function(x) {
+#     message(x)
+#     c(GRsQualOutInPairList$Aread5End[[x]], 
+#       GRsQualOutInPairList$Bread5End[[x]],
+#       GRsQualOutInPairList$Cmate5End[[x]])
+# }, simplify = FALSE)
+# filename <- sprintf("Data/PrimingRate/GRs%s.RDS", "ABreadCmate5End")
+# saveRDS(GRsABreadCmate5End, file = filename)
 
+## Replaced the special cases above by general processing as follows
 qualOutInPairs_merge_map <- list(
     "ABread5End" = c("Aread5End", "Bread5End"), 
     "ABreadAndFrag" = c("AreadAndFrag", "BreadAndFrag"), 
@@ -104,14 +105,14 @@ qualOutInPairs_merge_map <- list(
 )
 for (x in names(qualOutInPairs_merge_map)) {
     GRs_each <- sapply(qualOutInPairs_merge_map[[x]], function(y) {
-        filename <- sprintf("Data/release/PrimingRate/GRs%s.RDS", y)
+        filename <- sprintf("Data/PrimingRate/GRs%s.RDS", y)
             message(x, " < ", y, " ", filename)
             readRDS(filename)
     }, simplify = FALSE)
     GRs_merged <- sapply(sampleIDs, function(x) {
         unname(unlist(as(lapply(GRs_each, function(GRs) GRs[[x]]), "GRangesList")))
     }, simplify = FALSE)
-    filename <- sprintf("Data/release/PrimingRate/GRs%s.RDS", x)
+    filename <- sprintf("Data/PrimingRate/GRs%s.RDS", x)
     message(x, " > ", filename)
     saveRDS(GRs_merged, file = filename)
 }
@@ -119,15 +120,15 @@ for (x in names(qualOutInPairs_merge_map)) {
 ## Filter mouse samples (biological and virtual) to get rid of human contaminants.
 ## Note, these alignments are unique reads aligned to either species
 ###########################################################################
-contamReadIDs <- readRDS("Data/release/AlignmentArtifacts/Contam/primaryNoDupContamReadIDs.RDS")
-sharedReadIDs <- readRDS("Data/release/AlignmentArtifacts/SharedReads/primaryNoDupSharedReadIDs.RDS")
-rescuedReadIDs_ge20_lt20 <- readRDS("Data/release/AlignmentArtifacts/MapQual/rescuedPrimaryNoDupMapQualReadIDs_ge20_lt30_le0.1.RDS")
-rescuedReadIDs_ge30 <- readRDS("Data/release/AlignmentArtifacts/MapQual/rescuedPrimaryNoDupMapQualReadIDs_ge30_le0.1.RDS")
+contamReadIDs <- readRDS("Data/AlignmentArtifacts/Contam/primaryNoDupContamReadIDs.RDS")
+sharedReadIDs <- readRDS("Data/AlignmentArtifacts/SharedReads/primaryNoDupSharedReadIDs.RDS")
+rescuedReadIDs_ge20_lt20 <- readRDS("Data/AlignmentArtifacts/MapQual/rescuedPrimaryNoDupMapQualReadIDs_ge20_lt30_le0.1.RDS")
+rescuedReadIDs_ge30 <- readRDS("Data/AlignmentArtifacts/MapQual/rescuedPrimaryNoDupMapQualReadIDs_ge30_le0.1.RDS")
 
 mapqThs <- c("ge30_le0.1", "ge20_le0.1", "ge20_le0.1_strict", "ge10_le0.1")
 for (mapqTh in c(mapqThs)) {
     if (mapqTh != "ge20_le0.1_strict") {
-        goodMapQualReadIDs <- readRDS(file = sprintf("Data/release/AlignmentArtifacts/MapQual/goodPrimaryNoDupMapQualReadIDs_%s.RDS", mapqTh))
+        goodMapQualReadIDs <- readRDS(file = sprintf("Data/AlignmentArtifacts/MapQual/goodPrimaryNoDupMapQualReadIDs_%s.RDS", mapqTh))
         GRsQualOutInPairListFiltered <- sapply(qualOutInPairs, function(qualOutInPair) {
             GRsList <- GRsQualOutInPairList[[qualOutInPair]]
             sapply(sampleIDs, function(sampleID) {
@@ -148,12 +149,12 @@ for (mapqTh in c(mapqThs)) {
         }, simplify = FALSE)
         for (qualOutInPair in qualOutInPairs) {
             GRs <- GRsQualOutInPairListFiltered[[qualOutInPair]]
-            filename <- sprintf("Data/release/PrimingRate/GRs%sFiltered_%s.RDS", qualOutInPair, mapqTh)
+            filename <- sprintf("Data/PrimingRate/GRs%sFiltered_%s.RDS", qualOutInPair, mapqTh)
             saveRDS(GRs, file = filename)
         }
     } else {
-        goodMapQualReadIDs_30 <- readRDS(file = sprintf("Data/release/AlignmentArtifacts/MapQual/goodPrimaryNoDupMapQualReadIDs_%s.RDS", "ge30_le0.1"))
-        goodMapQualReadIDs_20 <- readRDS(file = sprintf("Data/release/AlignmentArtifacts/MapQual/goodPrimaryNoDupMapQualReadIDs_%s.RDS", "ge20_le0.1"))
+        goodMapQualReadIDs_30 <- readRDS(file = sprintf("Data/AlignmentArtifacts/MapQual/goodPrimaryNoDupMapQualReadIDs_%s.RDS", "ge30_le0.1"))
+        goodMapQualReadIDs_20 <- readRDS(file = sprintf("Data/AlignmentArtifacts/MapQual/goodPrimaryNoDupMapQualReadIDs_%s.RDS", "ge20_le0.1"))
         GRsQualOutInPairListFiltered <- sapply(qualOutInPairs, function(qualOutInPair) {
             GRsList <- GRsQualOutInPairList[[qualOutInPair]]
             sapply(sampleIDs, function(sampleID) {
@@ -181,7 +182,7 @@ for (mapqTh in c(mapqThs)) {
         }, simplify = FALSE)
         for (qualOutInPair in qualOutInPairs) {
             GRs <- GRsQualOutInPairListFiltered[[qualOutInPair]]
-            filename <- sprintf("Data/release/PrimingRate/GRs%sFiltered_%s.RDS", qualOutInPair, mapqTh)
+            filename <- sprintf("Data/PrimingRate/GRs%sFiltered_%s.RDS", qualOutInPair, mapqTh)
             saveRDS(GRs, file = filename)
         }
     }
@@ -193,14 +194,14 @@ for (mapqTh in c(mapqThs)) {
 for (mapqTh in mapqThs) {
     for (x in names(qualOutInPairs_merge_map)) {
         GRs_each <- sapply(qualOutInPairs_merge_map[[x]], function(y) {
-            filename <- sprintf("Data/release/PrimingRate/GRs%sFiltered_%s.RDS", y, mapqTh)
+            filename <- sprintf("Data/PrimingRate/GRs%sFiltered_%s.RDS", y, mapqTh)
             message(mapqTh, " ", x, " < ", y, " ", filename)
             readRDS(filename)
         }, simplify = FALSE)
         GRs_merged <- sapply(sampleIDs, function(x) {
             unname(unlist(as(lapply(GRs_each, function(GRs) GRs[[x]]), "GRangesList")))
         }, simplify = FALSE)
-        filename <- sprintf("Data/release/PrimingRate/GRs%sFiltered_%s.RDS", x, mapqTh)
+        filename <- sprintf("Data/PrimingRate/GRs%sFiltered_%s.RDS", x, mapqTh)
         message(mapqTh, " ", x, " > ", filename)
         saveRDS(GRs_merged, file = filename)
     }

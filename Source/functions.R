@@ -8,10 +8,10 @@
 ## License, v. 2.0. If a copy of the MPL was not distributed with this
 ## file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #######################################################################
-source("Source/release/functions/CHEX.R")
-source("Source/release/functions/Genome.R")
-source("Source/release/functions/Graphics.R")
-source("Source/release/functions/Stats.R")
-source("Source/release/functions/Repo.R")
-source("Source/release/functions/Tools.R")
-source("Source/release/functions/NGS.R")
+source("Source/functions/CHEX.R")
+source("Source/functions/Genome.R")
+source("Source/functions/Graphics.R")
+source("Source/functions/Stats.R")
+source("Source/functions/Repo.R")
+source("Source/functions/Tools.R")
+source("Source/functions/NGS.R")

@@ -8,7 +8,7 @@
 ## License, v. 2.0. If a copy of the MPL was not distributed with this
 ## file, You can obtain one at http://mozilla.org/MPL/2.0/.
 ###########################################################################
-source("Source/release/functions.R")
+source("Source/functions.R")
 library("ChIPseeker")
 library("TxDb.Hsapiens.UCSC.hg38.knownGene")
 library("TxDb.Mmusculus.UCSC.mm10.knownGene")
@@ -41,28 +41,28 @@ long <- dnazymes[len > 10, ]
 short$id <- paste(rownames(short), short$name, sep = "_")
 long$id <- paste(rownames(long), long$name, sep = "_")
 
-Tools$write_xlsx(list(long = long, short = short), file = "Report/release/DNAzyme/dnazymes.xlsx", row.names = FALSE)
+Tools$write_xlsx(list(long = long, short = short), file = "Report/DNAzyme/dnazymes.xlsx", row.names = FALSE)
 
 dnazyme_short <- short[, c("id", "e")]
 dnazyme_long <- long[, c("id", "e")]
 
-dir.create("Data/release/DNAzyme", FALSE, TRUE)
-filename <- "Data/release/DNAzyme/dnazyme_short.fa"
+dir.create("Data/DNAzyme", FALSE, TRUE)
+filename <- "Data/DNAzyme/dnazyme_short.fa"
 cat("", sep = "", file = filename)
 for (i in 1:nrow(dnazyme_short)) {
     cat(">", dnazyme_short[i, "id"], "\n", sep = "", file = filename, append = TRUE)
     cat(dnazyme_short[i, "e"], "\n", sep = "", file = filename, append = TRUE)
 }
 
-dir.create("Data/release/DNAzyme", FALSE, TRUE)
-filename <- "Data/release/DNAzyme/dnazyme_long.fa"
+dir.create("Data/DNAzyme", FALSE, TRUE)
+filename <- "Data/DNAzyme/dnazyme_long.fa"
 cat("", sep = "", file = filename)
 for (i in 1:nrow(dnazyme_long)) {
     cat(">", dnazyme_long[i, "id"], "\n", sep = "", file = filename, append = TRUE)
     cat(dnazyme_long[i, "e"], "\n", sep = "", file = filename, append = TRUE)
 }
 
-EnsFeatures <- readRDS("Data/release/GenomicFeatures/EnsFeatures.RDS")
+EnsFeatures <- readRDS("Data/GenomicFeatures/EnsFeatures.RDS")
 EnsFeatures_Transcript_human <- EnsFeatures$Transcript$human
 EnsFeatures_Transcript_mouse <- EnsFeatures$Transcript$mouse
 
@@ -73,7 +73,7 @@ seqlevels(EnsFeatures_Transcript_mouse) <- Genome$MainSeqLevels$mouse
 seqinfo(EnsFeatures_Transcript_human) <- Genome$MainSeqInfo$human
 seqinfo(EnsFeatures_Transcript_mouse) <- Genome$MainSeqInfo$mouse
 
-blast_long_hg38 <- read.csv("Data/release/DNAzyme/blast_long_hg38.sam", head = FALSE, sep = "\t", as.is = TRUE)
+blast_long_hg38 <- read.csv("Data/DNAzyme/blast_long_hg38.sam", head = FALSE, sep = "\t", as.is = TRUE)
 colnames(blast_long_hg38) <- c("qname", "flag", "rname", "pos", "mapq", "cigar", "rnext", "pnext", "tlen", "seq", "qual", "score", "evalue", "mismatches", "matches", "gaps")
 blast_long_hg38 <- data.frame(blast_long_hg38, long[sapply(strsplit(blast_long_hg38$qname, "_"), '[', 1), c("length", "reaction", "main_article_title", "main_article_pub_date")], row.names = NULL)
 blast_long_hg38 <- blast_long_hg38[, -match(c("qual", "rnext", "pnext", "tlen"), colnames(blast_long_hg38))]
@@ -87,10 +87,9 @@ ann_blast_long_hg38_df <- as.data.frame(ann_blast_long_hg38)
 all(as.character(grs_blast_long_hg38) == with(ann_blast_long_hg38_df, paste(seqnames, start, sep = ":")))
 ## [1] TRUE
 blast_long_hg38 <- cbind(blast_long_hg38, ann_blast_long_hg38_df[, -match(c("seqnames", "start", "end", "width", "strand", "geneChr", "tx_cds_seq_start", "tx_cds_seq_end", "tx_name"), colnames(ann_blast_long_hg38_df))])
-write.csv(blast_long_hg38, file = "Report/release/DNAzyme/blast_long_hg38.csv", row.names = FALSE)
-blast_long_hg38 <- data.table::data.table(openxlsx::read.xlsx("Report/release/DNAzyme/blast_long.xlsx", sheet = "hg38"))
+blast_long_hg38 <- data.table::data.table(openxlsx::read.xlsx("Report/DNAzyme/blast_long.xlsx", sheet = "hg38"))
 
-blast_long_mm10 <- read.csv("Data/release/DNAzyme/blast_long_mm10.sam", head = FALSE, sep = "\t", as.is = TRUE)
+blast_long_mm10 <- read.csv("Data/DNAzyme/blast_long_mm10.sam", head = FALSE, sep = "\t", as.is = TRUE)
 colnames(blast_long_mm10) <- c("qname", "flag", "rname", "pos", "mapq", "cigar", "rnext", "pnext", "tlen", "seq", "qual", "score", "evalue", "mismatches", "matches", "gaps")
 blast_long_mm10 <- data.frame(blast_long_mm10, long[sapply(strsplit(blast_long_mm10$qname, "_"), '[', 1), c("length", "reaction", "main_article_title", "main_article_pub_date")], row.names = NULL)
 blast_long_mm10 <- blast_long_mm10[, -match(c("qual", "rnext", "pnext", "tlen"), colnames(blast_long_mm10))]
@@ -104,10 +103,9 @@ ann_blast_long_mm10_df <- as.data.frame(ann_blast_long_mm10)
 all(as.character(grs_blast_long_mm10) == with(ann_blast_long_mm10_df, paste(seqnames, start, sep = ":")))
 ## [1] TRUE
 blast_long_mm10 <- cbind(blast_long_mm10, ann_blast_long_mm10_df[, -match(c("seqnames", "start", "end", "width", "strand", "geneChr", "tx_cds_seq_start", "tx_cds_seq_end", "tx_name"), colnames(ann_blast_long_mm10_df))])
-write.csv(blast_long_mm10, file = "Report/release/DNAzyme/blast_long_mm10.csv", row.names = FALSE)
-blast_long_mm10 <- data.table::data.table(openxlsx::read.xlsx("Report/release/DNAzyme/blast_long.xlsx", sheet = "mm10"))
+blast_long_mm10 <- data.table::data.table(openxlsx::read.xlsx("Report/DNAzyme/blast_long.xlsx", sheet = "mm10"))
 
-pdf("Report/release/DNAzyme/blast_long_map_quality.pdf")
+pdf("Report/DNAzyme/blast_long_map_quality.pdf")
 par(ps = 16)
 with(blast_long_hg38, smoothScatter((matches + mismatches)/length*100, mismatches/(matches + mismatches)*100, xlab = "% of the catalytic core being mapped to genome", ylab = "% of mapped based being mismatches", main = "hg38"))
 with(blast_long_mm10, smoothScatter((matches + mismatches)/length*100, mismatches/(matches + mismatches)*100, xlab = "% of the catalytic core being mapped to genome", ylab = "% of mapped based being mismatches", main = "mm10"))
@@ -116,7 +114,7 @@ dev.off()
 ###########################################################################
 #' process the short group
 ###########################################################################
-homer_short_hg38 <- data.table::fread("Data/release/DNAzyme/homer_short_hg38.bed.gz", header = FALSE, sep = "\t")
+homer_short_hg38 <- data.table::fread("Data/DNAzyme/homer_short_hg38.bed.gz", header = FALSE, sep = "\t")
 homer_short_hg38 <- homer_short_hg38[V1 %in% Genome$MainSeqLevels$human]
 homer_short_hg38[V4 %like% '_\\(', V4 := gsub("C22_\\(", "C22 (", V4)]
 grs_homer_short_hg38 <- homer_short_hg38[, list(.(GRanges(V1, IRanges(V2, V3), strand = V6, seqinfo = Genome$MainSeqInfo$human))), by = "V4"]
@@ -140,9 +138,9 @@ ann_homer_short_hg38_byid <- t(do.call(cbind, lapply(ann_homer_short_hg38_byid, 
 ann_homer_short_hg38_byid <- data.frame(id = rownames(ann_homer_short_hg38_byid), ann_homer_short_hg38_byid, stringsAsFactors = FALSE, check.names = FALSE)
 
 homer_short_hg38_cnts_bychr <- merge(homer_short_hg38_cnts_bychr, ann_homer_short_hg38_byid, by.x = "id", by.y = "id", all.x = TRUE)
-write.csv(homer_short_hg38_cnts_bychr, file = "Report/release/DNAzyme/homer_short_hg38.csv", row.names = FALSE)
+write.csv(homer_short_hg38_cnts_bychr, file = "Report/DNAzyme/homer_short_hg38.csv", row.names = FALSE)
 
-homer_short_mm10 <- data.table::fread("Data/release/DNAzyme/homer_short_mm10.bed.gz", header = FALSE, sep = "\t")
+homer_short_mm10 <- data.table::fread("Data/DNAzyme/homer_short_mm10.bed.gz", header = FALSE, sep = "\t")
 homer_short_mm10 <- homer_short_mm10[V1 %in% Genome$MainSeqLevels$mouse]
 homer_short_mm10[V4 %like% '_\\(', V4 := gsub("C22_\\(", "C22 (", V4)]
 grs_homer_short_mm10 <- homer_short_mm10[, list(.(GRanges(V1, IRanges(V2, V3), strand = V6, seqinfo = Genome$MainSeqInfo$mouse))), by = "V4"]
@@ -166,11 +164,11 @@ ann_homer_short_mm10_byid <- t(do.call(cbind, lapply(ann_homer_short_mm10_byid, 
 ann_homer_short_mm10_byid <- data.frame(id = rownames(ann_homer_short_mm10_byid), ann_homer_short_mm10_byid, stringsAsFactors = FALSE, check.names = FALSE)
 
 homer_short_mm10_cnts_bychr <- merge(homer_short_mm10_cnts_bychr, ann_homer_short_mm10_byid, by.x = "id", by.y = "id", all.x = TRUE)
-write.csv(homer_short_mm10_cnts_bychr, file = "Report/release/DNAzyme/homer_short_mm10.csv", row.names = FALSE)
+write.csv(homer_short_mm10_cnts_bychr, file = "Report/DNAzyme/homer_short_mm10.csv", row.names = FALSE)
 ###########################################################################
 #' test if long catalytic sequences are enriched
 ###########################################################################
-pdf("Report/release/DNAzyme/blast_long_nhits_vs_length.pdf")
+pdf("Report/DNAzyme/blast_long_nhits_vs_length.pdf")
 par(ps = 16)
 x <- table(blast_long_hg38$qname)
 y <- structure(blast_long_hg38[duplicated(blast_long_hg38$qname), "length"], names = blast_long_hg38[duplicated(blast_long_hg38$qname), "qname"])
@@ -190,7 +188,7 @@ grs_blast_long_mm10 <- GRanges(blast_long_mm10$rname, IRanges(blast_long_mm10$po
 grs_dnazyme_hg38 <- c(as(list(longcores = grs_blast_long_hg38), "GRangesList"), grs_homer_short_hg38)
 grs_dnazyme_mm10 <- c(as(list(longcores = grs_blast_long_mm10), "GRangesList"), grs_homer_short_mm10)
 ###########################################################################
-SampleInfoFull <- read.csv("Data/release/SampleInfoFullOutAnnotated20201221CV2b.csv", as.is = TRUE, check.names = FALSE)
+SampleInfoFull <- read.csv("Data/SampleInfoFullOutAnnotated20201221CV2b.csv", as.is = TRUE, check.names = FALSE)
 sampleIDsFull <- rownames(SampleInfoFull) <- SampleInfoFull[, "SampleID"]
 SampleInfo <- subset(SampleInfoFull, CompType == "Biol")
 SampleInfoVirtual <- subset(SampleInfoFull, CompType == "Virtual")
@@ -206,7 +204,7 @@ PFs_blast_long_hg38 <- sapply(binsizeLabs, function(binsizeLab) {
 
 qualOutInPair <- "ABreadCmate5End"
 mapqTh <- "ge20_le0.1_strict"
-GRs <- readRDS(sprintf("Data/release/PrimingRate/GRs%sFiltered_%s.RDS", qualOutInPair, mapqTh))
+GRs <- readRDS(sprintf("Data/PrimingRate/GRs%sFiltered_%s.RDS", qualOutInPair, mapqTh))
 GRsVirtual <- sapply(sampleIDsVirtual, function(sampleID) {
     message(sampleID)
     sourceIDs <- SampleInfoFull[sampleID, "SourceIDsNoOut"]
@@ -251,8 +249,8 @@ ChexDnazymeAssoc_pvals <- sapply(bioGroups_human, function(x) {
     })
 })
 
-write.csv(ChexDnazymeAssoc_Log2OddsRatios, file = "Report/release/DNAzyme/ChexDnazymeAssc_Log2OddsRatios_human.csv") 
-write.csv(ChexDnazymeAssoc_pvals, file = "Report/release/DNAzyme/ChexDnazymeAssc_pvals_human.csv") 
+write.csv(ChexDnazymeAssoc_Log2OddsRatios, file = "Report/DNAzyme/ChexDnazymeAssc_Log2OddsRatios_human.csv") 
+write.csv(ChexDnazymeAssoc_pvals, file = "Report/DNAzyme/ChexDnazymeAssc_pvals_human.csv") 
 
  
 SIDsVirtmax_mouse <- c("MouseAstroCulturePositiveAll", "MouseNeuronCulturePositiveAll", "MouseNeuronSlicePositiveAll", "MouseInterneuronSlicePositiveMerged")
@@ -279,8 +277,8 @@ ChexDnazymeAssoc_pvals <- sapply(bioGroups_mouse, function(x) {
     })
 })
 
-write.csv(ChexDnazymeAssoc_Log2OddsRatios, file = "Report/release/DNAzyme/ChexDnazymeAssc_Log2OddsRatios_mouse.csv") 
-write.csv(ChexDnazymeAssoc_pvals, file = "Report/release/DNAzyme/ChexDnazymeAssc_pvals_mouse.csv") 
+write.csv(ChexDnazymeAssoc_Log2OddsRatios, file = "Report/DNAzyme/ChexDnazymeAssc_Log2OddsRatios_mouse.csv") 
+write.csv(ChexDnazymeAssoc_pvals, file = "Report/DNAzyme/ChexDnazymeAssc_pvals_mouse.csv") 
 
 ###########################################################################
 #' take the top porphyrin metalation DNAzymes for further experiment
@@ -291,28 +289,28 @@ blast_long_hg38[qname == "469_PS5", qname := "469_PS5 (PS5.M)"]
 blast_long_hg38[, c("perc_mapped", "perc_mismatch") := list(100 * (mismatches + matches) / length, 100 * mismatches / (mismatches + matches))]
 blast_long_hg38_porphyrin <- blast_long_hg38[perc_mapped >= 80 & perc_mismatch <= 1 & reaction == "Porphyrin metalation"][order(-perc_mapped, perc_mismatch)]
 blast_long_hg38_porphyrin <- long[blast_long_hg38_porphyrin, on = c(id = "qname")]
-write.csv(blast_long_hg38_porphyrin, file = "Report/release/DNAzyme/blast_long_hg38_filtered_porphyrin.csv", row.names = FALSE)
+write.csv(blast_long_hg38_porphyrin, file = "Report/DNAzyme/blast_long_hg38_filtered_porphyrin.csv", row.names = FALSE)
 
 blast_long_mm10[, c("perc_mapped", "perc_mismatch") := list(100 * (mismatches + matches) / length, 100 * mismatches / (mismatches + matches))]
 blast_long_mm10_porphyrin <- blast_long_mm10[perc_mapped >= 80 & perc_mismatch <= 1 & reaction == "Porphyrin metalation"][order(-perc_mapped, perc_mismatch)]
 blast_long_mm10_porphyrin <- long[blast_long_mm10_porphyrin, on = c(id = "qname")]
-write.csv(blast_long_mm10_porphyrin, file = "Report/release/DNAzyme/blast_long_mm10_filtered_porphyrin.csv", row.names = FALSE)
+write.csv(blast_long_mm10_porphyrin, file = "Report/DNAzyme/blast_long_mm10_filtered_porphyrin.csv", row.names = FALSE)
 
 ###########################################################################
 #' take the top RNA-cleavage DNAzymes for further experiment
 ###########################################################################
 blast_long_hg38_rnacleavage <- blast_long_hg38[perc_mapped >= 80 & perc_mismatch <= 1 & reaction == "RNA cleavage"][order(-perc_mapped, perc_mismatch)]
 blast_long_hg38_rnacleavage <- long[blast_long_hg38_rnacleavage, on = c(id = "qname")]
-write.csv(blast_long_hg38_rnacleavage, file = "Report/release/DNAzyme/blast_long_hg38_filtered_rnacleavage.csv", row.names = FALSE)
+write.csv(blast_long_hg38_rnacleavage, file = "Report/DNAzyme/blast_long_hg38_filtered_rnacleavage.csv", row.names = FALSE)
 
 blast_long_mm10_rnacleavage <- blast_long_mm10[perc_mapped >= 80 & perc_mismatch <= 1 & reaction == "RNA cleavage"][order(-perc_mapped, perc_mismatch)]
 blast_long_mm10_rnacleavage <- long[blast_long_mm10_rnacleavage, on = c(id = "qname")]
-write.csv(blast_long_mm10_rnacleavage, file = "Report/release/DNAzyme/blast_long_mm10_filtered_rnacleavage.csv", row.names = FALSE)
+write.csv(blast_long_mm10_rnacleavage, file = "Report/DNAzyme/blast_long_mm10_filtered_rnacleavage.csv", row.names = FALSE)
 
 ###########################################################################
 ## how many porphyrin DNAzyme sites overlap with CHEX
 ###########################################################################
-SampleInfoFull <- read.csv("Data/release/SampleInfoFullOutAnnotated20201221CV2b.csv", as.is = TRUE, check.names = FALSE)
+SampleInfoFull <- read.csv("Data/SampleInfoFullOutAnnotated20201221CV2b.csv", as.is = TRUE, check.names = FALSE)
 sampleIDsFull <- rownames(SampleInfoFull) <- SampleInfoFull[, "SampleID"]
 SampleInfo <- subset(SampleInfoFull, CompType == "Biol")
 SampleInfoVirtual <- subset(SampleInfoFull, CompType == "Virtual")
@@ -321,7 +319,7 @@ sampleIDsVirtual <- SampleInfoVirtual[, "SampleID"]
 Species <- c("human", "mouse", "rat", "none")
 qualOutInPair <- "ABreadCmate5End"
 mapqTh <- "ge20_le0.1_strict"
-GRs <- readRDS(sprintf("Data/release/PrimingRate/GRs%sFiltered_%s.RDS", qualOutInPair, mapqTh))
+GRs <- readRDS(sprintf("Data/PrimingRate/GRs%sFiltered_%s.RDS", qualOutInPair, mapqTh))
 GRsVirtual <- sapply(sampleIDsVirtual, function(sampleID) {
     message(sampleID)
     sourceIDs <- SampleInfoFull[sampleID, "SourceIDsNoOut"]
@@ -337,8 +335,8 @@ grs_chex_mouse <- c(GRsFull$MouseAstroCulturePositiveAll, GRsFull$MouseNeuronCul
 grs_chex_human_ext <- flank(grs_chex_human, width = 1000, start = TRUE, both = TRUE)
 grs_chex_mouse_ext <- flank(grs_chex_mouse, width = 1000, start = TRUE, both = TRUE)
 
-blast_long_porphyrin_hg38 <- data.table(openxlsx::read.xlsx("Report/release/DNAzyme/blast_long_filtered_porphyrin.xlsx", sheet = "hg38"))
-blast_long_porphyrin_mm10 <- data.table(openxlsx::read.xlsx("Report/release/DNAzyme/blast_long_filtered_porphyrin.xlsx", sheet = "mm10"))
+blast_long_porphyrin_hg38 <- data.table(openxlsx::read.xlsx("Report/DNAzyme/blast_long_filtered_porphyrin.xlsx", sheet = "hg38"))
+blast_long_porphyrin_mm10 <- data.table(openxlsx::read.xlsx("Report/DNAzyme/blast_long_filtered_porphyrin.xlsx", sheet = "mm10"))
 
 blast_long_porphyrin_hg38[, ins := sapply(cigar, function(x) Genome$parse_cigar(x, "I"))]
 blast_long_porphyrin_hg38[, del := sapply(cigar, function(x) Genome$parse_cigar(x, "D"))]
@@ -380,34 +378,34 @@ blast_long_porphyrin_mm10[, end := end(grs_long_porphyrin_mm10)]
 blast_long_porphyrin_hg38[, chexcnts := hits_dnazyme_porphyrin_hg38_chexcnts]
 blast_long_porphyrin_mm10[, chexcnts := hits_dnazyme_porphyrin_mm10_chexcnts]
 
-rtracklayer::export(grs_long_porphyrin_hg38, con = "Data/release/DNAzyme/grs_long_porphyrin_hg38_core.bed")
-rtracklayer::export(grs_long_porphyrin_mm10, con = "Data/release/DNAzyme/grs_long_porphyrin_mm10_core.bed")
+rtracklayer::export(grs_long_porphyrin_hg38, con = "Data/DNAzyme/grs_long_porphyrin_hg38_core.bed")
+rtracklayer::export(grs_long_porphyrin_mm10, con = "Data/DNAzyme/grs_long_porphyrin_mm10_core.bed")
 
 grs_long_porphyrin_hg38_upstream <- flank(grs_long_porphyrin_hg38, start = TRUE, width = 100, both = FALSE)
 grs_long_porphyrin_hg38_dnstream <- flank(grs_long_porphyrin_hg38, start = FALSE, width = 100, both = FALSE)
-rtracklayer::export(grs_long_porphyrin_hg38_upstream, con = "Data/release/DNAzyme/grs_long_porphyrin_hg38_upstream.bed")
-rtracklayer::export(grs_long_porphyrin_hg38_dnstream, con = "Data/release/DNAzyme/grs_long_porphyrin_hg38_dnstream.bed")
+rtracklayer::export(grs_long_porphyrin_hg38_upstream, con = "Data/DNAzyme/grs_long_porphyrin_hg38_upstream.bed")
+rtracklayer::export(grs_long_porphyrin_hg38_dnstream, con = "Data/DNAzyme/grs_long_porphyrin_hg38_dnstream.bed")
 
 grs_long_porphyrin_mm10_upstream <- flank(grs_long_porphyrin_mm10, start = TRUE, width = 100, both = FALSE)
 grs_long_porphyrin_mm10_dnstream <- flank(grs_long_porphyrin_mm10, start = FALSE, width = 100, both = FALSE)
-rtracklayer::export(grs_long_porphyrin_mm10_upstream, con = "Data/release/DNAzyme/grs_long_porphyrin_mm10_upstream.bed")
-rtracklayer::export(grs_long_porphyrin_mm10_dnstream, con = "Data/release/DNAzyme/grs_long_porphyrin_mm10_dnstream.bed")
+rtracklayer::export(grs_long_porphyrin_mm10_upstream, con = "Data/DNAzyme/grs_long_porphyrin_mm10_upstream.bed")
+rtracklayer::export(grs_long_porphyrin_mm10_dnstream, con = "Data/DNAzyme/grs_long_porphyrin_mm10_dnstream.bed")
 
-seq_long_porphyrin_hg38_core <- readLines("Data/release/DNAzyme/grs_long_porphyrin_hg38_core.fa")
+seq_long_porphyrin_hg38_core <- readLines("Data/DNAzyme/grs_long_porphyrin_hg38_core.fa")
 seq_long_porphyrin_hg38_core <- seq_long_porphyrin_hg38_core[seq(2, length(seq_long_porphyrin_hg38_core), by = 2)]
-seq_long_porphyrin_hg38_ext <- readLines("Data/release/DNAzyme/grs_long_porphyrin_hg38_200nt.fa")
+seq_long_porphyrin_hg38_ext <- readLines("Data/DNAzyme/grs_long_porphyrin_hg38_200nt.fa")
 seq_long_porphyrin_hg38_ext <- seq_long_porphyrin_hg38_ext[seq(2, length(seq_long_porphyrin_hg38_ext), by = 2)]
 
 blast_long_porphyrin_hg38[, dna_core_seq := seq_long_porphyrin_hg38_core]
 blast_long_porphyrin_hg38[, dna_ext_seq := seq_long_porphyrin_hg38_ext]
 
-seq_long_porphyrin_mm10_core <- readLines("Data/release/DNAzyme/grs_long_porphyrin_mm10_core.fa")
+seq_long_porphyrin_mm10_core <- readLines("Data/DNAzyme/grs_long_porphyrin_mm10_core.fa")
 seq_long_porphyrin_mm10_core <- seq_long_porphyrin_mm10_core[seq(2, length(seq_long_porphyrin_mm10_core), by = 2)]
-seq_long_porphyrin_mm10_ext <- readLines("Data/release/DNAzyme/grs_long_porphyrin_mm10_200nt.fa")
+seq_long_porphyrin_mm10_ext <- readLines("Data/DNAzyme/grs_long_porphyrin_mm10_200nt.fa")
 seq_long_porphyrin_mm10_ext <- seq_long_porphyrin_mm10_ext[seq(2, length(seq_long_porphyrin_mm10_ext), by = 2)]
 
 blast_long_porphyrin_mm10[, dna_core_seq := seq_long_porphyrin_mm10_core]
 blast_long_porphyrin_mm10[, dna_ext_seq := seq_long_porphyrin_mm10_ext]
 
-fwrite(blast_long_porphyrin_hg38, file = "Report/release/DNAzyme/blast_long_filtered_porphyrin_hg38.csv")
-fwrite(blast_long_porphyrin_mm10, file = "Report/release/DNAzyme/blast_long_filtered_porphyrin_mm10.csv")
+fwrite(blast_long_porphyrin_hg38, file = "Report/DNAzyme/blast_long_filtered_porphyrin_hg38.csv")
+fwrite(blast_long_porphyrin_mm10, file = "Report/DNAzyme/blast_long_filtered_porphyrin_mm10.csv")

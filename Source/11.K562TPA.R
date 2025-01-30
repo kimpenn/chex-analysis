@@ -8,9 +8,9 @@
 ## License, v. 2.0. If a copy of the MPL was not distributed with this
 ## file, You can obtain one at http://mozilla.org/MPL/2.0/.
 ###########################################################################
-source("Source/release/functions.R")
+source("Source/functions.R")
 
-SampleInfoFull <- read.csv("Data/release/SampleInfoFullOutAnnotated20201221CV2b.csv", as.is = TRUE, check.names = FALSE)
+SampleInfoFull <- read.csv("Data/SampleInfoFullOutAnnotated20201221CV2b.csv", as.is = TRUE, check.names = FALSE)
 sampleIDsFull <- rownames(SampleInfoFull) <- SampleInfoFull[, "SampleID"]
 SampleInfo <- subset(SampleInfoFull, CompType == "Biol")
 SampleInfoVirtual <- subset(SampleInfoFull, CompType == "Virtual")
@@ -20,14 +20,7 @@ sampleIDsVirtual <- SampleInfoVirtual[, "SampleID"]
 bioGroups <- c(
     "K562", "K562TPAnone", "K562TPA15min", "K562TPA1hr", "K562TPA2hr", "K562TPA24hr", 
     "HumanAstroCulture", "HumanNeuronCulture", "HumanInterneuronCulture",
-    "MouseAstroCulture", "MouseNeuronCulture", "MouseNeuronSlice", "MouseInterneuronSlice", 
-    "MouseLungEpithelialCulture", "MouseLungEndothelialCulture",
-    "MouseKidneyEpithelialCulture",
-    "MouseCardiomyoCulture", "MouseCardiomyoSlice",
-    "RatCardiomyoCulture", 
-    "NoCell", 
-    "K562MungBean", 
-    "HBR"
+    "MouseAstroCulture", "MouseNeuronCulture", "MouseNeuronSlice", "MouseInterneuronSlice"
 )
 bioGroupCols <- structure(if (length(bioGroups) <= 9) { brewer.pal(n = length(bioGroups), "Set1") } else { colorRampPalette(brewer.pal(n = 9, "Set1"))(length(bioGroups)) }, names = bioGroups)
 sampleIDsByBioGroup <- sapply(bioGroups, function(bioGroup) subset(SampleInfoFull, CompType == "Biol" & BioGroup == bioGroup)[["SampleID"]], simplify = FALSE)
@@ -37,7 +30,7 @@ bioGroup2Species <- sapply(bioGroups, function(bioGroup) subset(SampleInfoFull, 
 
 qualOutInPair <- "ABreadCmate5End"
 mapqTh <- "ge20_le0.1_strict"
-filename <- sprintf("Data/release/PrimingRate/GRs%sFiltered_%s.RDS", qualOutInPair, mapqTh)
+filename <- sprintf("Data/PrimingRate/GRs%sFiltered_%s.RDS", qualOutInPair, mapqTh)
 GRs <- readRDS(filename)
 GRsVirtual <- sapply(sampleIDsVirtual, function(sampleID) {
     message(sampleID)
@@ -48,8 +41,8 @@ GRsVirtual <- sapply(sampleIDsVirtual, function(sampleID) {
 }, simplify = FALSE)
 GRsFull <- c(GRs, GRsVirtual)[sampleIDsFull]
 
-EnsFeatures <- readRDS("Data/release/GenomicFeatures/EnsFeatures.RDS")
-FeatureIDsMainNoMY <- readRDS("Data/release/GenomicFeatures/FeatureIDsMainNoMY.RDS")
+EnsFeatures <- readRDS("Data/GenomicFeatures/EnsFeatures.RDS")
+FeatureIDsMainNoMY <- readRDS("Data/GenomicFeatures/FeatureIDsMainNoMY.RDS")
 EnsGenesMainNoMY_human <- EnsFeatures[["Gene"]][["human"]][FeatureIDsMainNoMY[["human"]][["Gene"]]]
 
 EnsTSSdn5kMainNoMY_human <- flank(EnsGenesMainNoMY_human, width = -5000, start = TRUE)
@@ -145,7 +138,7 @@ CntSumCulsumsTSSflank5kMainNoMYVirtmaxK562TPA <- apply(CntSumsTSSflank5kMainNoMY
 TotCntsTSSflank5kMainNoMYVirtmaxK562TPA <- colSums(CntSumsTSSflank5kMainNoMYVirtmaxK562TPA)
 CntSumCulprobsTSSflank5kMainNoMYVirtmaxK562TPA <- t(t(CntSumCulsumsTSSflank5kMainNoMYVirtmaxK562TPA) / TotCntsTSSflank5kMainNoMYVirtmaxK562TPA)
 
-dirname <- "Report/release/K562TPA/CumulCurves/ABreadCmate5EndFiltered_ge20_le0.1_strict"
+dirname <- "Report/K562TPA/CumulCurves/ABreadCmate5EndFiltered_ge20_le0.1_strict"
 dir.create(dirname, FALSE, TRUE)
 filename <- file.path(dirname, "CntSumCulprobsTSSflank5kMainNoMYVirtmaxK562TPA.pdf")
 pdf(filename, width = 4.5, height = 4.5)
@@ -154,6 +147,8 @@ matplot(x = seq(-4999, 5000, by = 1), y = CntSumCulprobsTSSflank5kMainNoMYVirtma
 legend("topleft", legend = sub("^K562TPA", "", bioGroupsK562TPA), lty = seq(bioGroupsK562TPA), lwd = 2, col = bioGroupCols[bioGroupsK562TPA], box.col = NA)
 abline(b = 1/10000, a = 0.5, lty = 2, col = "red")
 dev.off()
+filename <- file.path(dirname, "CntSumCulprobsTSSflank5kMainNoMYVirtmaxK562TPA.csv")
+write.csv(CntSumCulprobsTSSflank5kMainNoMYVirtmaxK562TPA, file = filename)
 
 ## AUC-type of stats
 FoldEnrichTSSflank5kMainNoMYVirtmaxK562TPA <- 1 / ((colSums(CntSumCulprobsTSSflank5kMainNoMYVirtmaxK562TPA[1:5000, ]) + colSums(1 - CntSumCulprobsTSSflank5kMainNoMYVirtmaxK562TPA[5001:10000, ])) / 2500)
@@ -164,9 +159,8 @@ barplot(rev(FoldEnrichTSSflank5kMainNoMYVirtmaxK562TPA), horiz = TRUE, las = 1, 
 axis(side = 3, at = seq(0, 1.5, by = 0.5))
 title(main = "Fold of TSS enrichment", outer = TRUE)
 dev.off()
-dirname <- "Report/release/K562TPA/CumulCurves/ABreadCmate5EndFiltered_ge20_le0.1_strict"
-dir.create(dirname, FALSE, TRUE)
-write.csv(FoldEnrichTSSflank5kMainNoMYVirtmaxK562TPA, file = "Report/release/K562TPA/CumulCurves/ABreadCmate5EndFiltered_ge20_le0.1_strict/FoldEnrichTSSflank5kMainNoMYVirtmaxK562TPA.csv")
+filename <- file.path(dirname, "FoldEnrichTSSflank5kMainNoMYVirtmaxK562TPA.csv")
+write.csv(FoldEnrichTSSflank5kMainNoMYVirtmaxK562TPA, file = filename)
 
 ###########################################################################
 ## Diffrential analysis
@@ -178,7 +172,7 @@ mapqThs <- c("ge20_le0.1_strict", "ge30_le0.1", "ge20_le0.1", "ge10_le0.1")[1]
 
 PFsFiltered <- sapply(mapqThs, function(th) {
     sapply(qualOutInPairs, function(qualOutInPair) {
-        filename <- sprintf("Data/release/PrimingRateGene/PFs%sFiltered_%s.RDS", qualOutInPair, th)
+        filename <- sprintf("Data/PrimingRateGene/PFs%sFiltered_%s.RDS", qualOutInPair, th)
         message(filename)
         readRDS(filename)
     }, simplify = FALSE)
@@ -236,12 +230,13 @@ diffgenes <- genes[
 ]
 length(diffgenes)
 ## [1] 67
-cat(diffgenes, file = "Report/release/K562TPA/DiffPriming/ABreadCmate5EndFiltered_ge20_le0.1_strict/DiffPrimStats_Binary_GeneExt_K562TPA15min_vs_K562TPAnone_symbol.txt", sep = "\n")
+cat(diffgenes, file = "Report/K562TPA/DiffPriming/ABreadCmate5EndFiltered_ge20_le0.1_strict/DiffPrimStats_Binary_GeneExt_K562TPA15min_vs_K562TPAnone_symbol.txt", sep = "\n")
 
-diffgenes <- readLines("Report/release/K562TPA/DiffPriming/ABreadCmate5EndFiltered_ge20_le0.1_strict/DiffPrimStats_Binary_GeneExt_K562TPA15min_vs_K562TPAnone_symbol.txt")
-pdf("Report/release/K562TPA/DiffPriming/ABreadCmate5EndFiltered_ge20_le0.1_strict/DiffPrimStats_Binary_GeneExt_K562TPA15min_vs_K562TPAnone.pdf", width = 10, height = 3)
+diffgenes <- readLines("Report/K562TPA/DiffPriming/ABreadCmate5EndFiltered_ge20_le0.1_strict/DiffPrimStats_Binary_GeneExt_K562TPA15min_vs_K562TPAnone_symbol.txt")
+pdf("Report/K562TPA/DiffPriming/ABreadCmate5EndFiltered_ge20_le0.1_strict/DiffPrimStats_Binary_GeneExt_K562TPA15min_vs_K562TPAnone.pdf", width = 10, height = 3)
 pheatmap(t(log2(1 + PFsFiltered_K562TPA_GeneExt[diffgenes, ])), border_color = NA, annotation_row = SampleInfo[c(sampleIDs_K562TPAnone, sampleIDs_K562TPA15min), "BioGroup", drop = FALSE], show_rownames = FALSE, angle = 90, cellheight = 8, cellwidth = 8, treeheight_row = 20, treeheight_col = 20)
 dev.off()
+write.csv(log2(1 + PFsFiltered_K562TPA_GeneExt[diffgenes, ]), file = "Report/K562TPA/DiffPriming/ABreadCmate5EndFiltered_ge20_le0.1_strict/DiffPrimStats_Binary_GeneExt_K562TPA15min_vs_K562TPAnone.csv")
 
 ###########################################################################
 ## Time-dependent gene-body changes corresponding to the TSS changes
@@ -261,21 +256,22 @@ PFsLibNorm_K562TPA_GeneExt_series <- cbind(
 )
 colnames(PFsLibNorm_K562TPA_GeneExt_series) <- c("K562TPAnone", "K562TPA15min", "K562TPA1hr", "K562TPA2hr", "K562TPA24hr")
 FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman <- apply(PFsLibNorm_K562TPA_GeneExt_series, 1, function(y) cor(y, FoldEnrichTSSflank5kMainNoMYVirtmaxK562TPA, method = "spearman"))
-write.csv(FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman, file = "Report/release/K562TPA/CumulCurves/ABreadCmate5EndFiltered_ge20_le0.1_strict/FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman.csv")
+write.csv(FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman, file = "Report/K562TPA/CumulCurves/ABreadCmate5EndFiltered_ge20_le0.1_strict/FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman.csv")
+
 pal <- colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(256)
 breaks <- seq(0, max(log2(1 + 1e6 * PFsLibNorm_K562TPA_GeneExt_series[names(na.omit(FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman[abs(FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman) >= 0.9])), ])), length.out = 255)
-pdf("Report/release/K562TPA/CumulCurves/ABreadCmate5EndFiltered_ge20_le0.1_strict/FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman_+0.9_pheatmap.pdf", width = 5, height = 5)
+pdf("Report/K562TPA/CumulCurves/ABreadCmate5EndFiltered_ge20_le0.1_strict/FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman_+0.9_pheatmap.pdf", width = 5, height = 5)
 pheatmap(log2(1 + 1e6 * PFsLibNorm_K562TPA_GeneExt_series[names(na.omit(FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman[FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman >= 0.9])), ]), cluster_row = TRUE, cluster_col = FALSE, border = FALSE, annotation_col = SampleInfo[colnames(PFsFiltered_K562TPA_GeneExt_series), "BioGroup", drop = FALSE], show_colnames = FALSE, annotation_colors = list(BioGroup = structure(bioGroupCols[bioGroupsK562TPA], names = colnames(PFsLibNorm_K562TPA_GeneExt_series))), fontsize_row = 6, cellheight = 6, color = pal, breaks = breaks)
 dev.off()
-pdf("Report/release/K562TPA/CumulCurves/ABreadCmate5EndFiltered_ge20_le0.1_strict/FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman_-0.9_pheatmap.pdf", width = 5, height = 5)
+pdf("Report/K562TPA/CumulCurves/ABreadCmate5EndFiltered_ge20_le0.1_strict/FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman_-0.9_pheatmap.pdf", width = 5, height = 5)
 pheatmap(log2(1 + 1e6 * PFsLibNorm_K562TPA_GeneExt_series[names(na.omit(FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman[FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman <= -0.9])), ]), cluster_row = TRUE, cluster_col = FALSE, border = FALSE, annotation_col = SampleInfo[colnames(PFsFiltered_K562TPA_GeneExt_series), "BioGroup", drop = FALSE], show_colnames = FALSE, annotation_colors = list(BioGroup = structure(bioGroupCols[bioGroupsK562TPA], names = colnames(PFsLibNorm_K562TPA_GeneExt_series))), fontsize_row = 6, cellheight = 6, color = pal, breaks = breaks)
 dev.off()
 
 ###########################################################################
 ## Functional enrichment analysis 
 ###########################################################################
-OrgDbGOSymbolList <- readRDS(file = "Data/release/GenomicFeatures/Annotations/OrgDbGOSymbolList.RDS")
-OrgDbGONameList <- readRDS(file = "Data/release/GenomicFeatures/Annotations/OrgDbGONameList.RDS")
+OrgDbGOSymbolList <- readRDS(file = "Data/GenomicFeatures/Annotations/OrgDbGOSymbolList.RDS")
+OrgDbGONameList <- readRDS(file = "Data/GenomicFeatures/Annotations/OrgDbGONameList.RDS")
 GOonts <- c("MF", "BP", "CC")
 
 pos <- enricher(gene = names(na.omit(FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman[FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman >= 0.9])), pvalueCutoff = Inf, qvalueCutoff = Inf, universe = names(FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman), pAdjustMethod = "BH", minGSSize = 5, maxGSSize = 500, TERM2GENE = OrgDbGOSymbolList$human$MF, TERM2NAME = OrgDbGONameList$human$MF)
@@ -283,8 +279,8 @@ neg <- enricher(gene = names(na.omit(FoldEnrichTSSflank5kLibNormCnts_GeneExt_spe
 
 go_mf_pos <- as.data.frame(pos)
 go_mf_neg <- as.data.frame(neg)
-write.csv(go_mf_pos, file = "Report/release/K562TPA/CumulCurves/ABreadCmate5EndFiltered_ge20_le0.1_strict/FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman_+0.9_enrich_GO_MF.csv", row.names = FALSE)
-write.csv(go_mf_neg, file = "Report/release/K562TPA/CumulCurves/ABreadCmate5EndFiltered_ge20_le0.1_strict/FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman_-0.9_enrich_GO_MF.csv", row.names = FALSE)
+write.csv(go_mf_pos, file = "Report/K562TPA/CumulCurves/ABreadCmate5EndFiltered_ge20_le0.1_strict/FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman_+0.9_enrich_GO_MF.csv", row.names = FALSE)
+write.csv(go_mf_neg, file = "Report/K562TPA/CumulCurves/ABreadCmate5EndFiltered_ge20_le0.1_strict/FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman_-0.9_enrich_GO_MF.csv", row.names = FALSE)
 
 go_mf_pos$OddsRatio <- sapply(strsplit(go_mf_pos[, "GeneRatio"], "/"), function(x) as.integer(x[1])/as.integer(x[2])) / sapply(strsplit(go_mf_pos[, "BgRatio"], "/"), function(x) as.integer(x[1])/as.integer(x[2]))
 go_mf_neg$OddsRatio <- sapply(strsplit(go_mf_neg[, "GeneRatio"], "/"), function(x) as.integer(x[1])/as.integer(x[2])) / sapply(strsplit(go_mf_neg[, "BgRatio"], "/"), function(x) as.integer(x[1])/as.integer(x[2]))
@@ -292,10 +288,10 @@ go_mf_neg$OddsRatio <- sapply(strsplit(go_mf_neg[, "GeneRatio"], "/"), function(
 padj_th <- 0.1
 go_mf_pos_sig <- go_mf_pos[go_mf_pos[, "p.adjust"] < padj_th, ]
 go_mf_neg_sig <- go_mf_neg[go_mf_neg[, "p.adjust"] < padj_th, ]
-pdf("Report/release/K562TPA/CumulCurves/ABreadCmate5EndFiltered_ge20_le0.1_strict/FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman_+0.9_enrich_GO_MF.pdf", height = 3.5, width = 16)
+pdf("Report/K562TPA/CumulCurves/ABreadCmate5EndFiltered_ge20_le0.1_strict/FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman_+0.9_enrich_GO_MF.pdf", height = 3.5, width = 16)
 ggplot(go_mf_pos_sig, aes(y = Description, x = p.adjust, fill = log2(OddsRatio))) + geom_bar(stat = "identity") + scale_y_discrete(limits = go_mf_pos_sig[rev(order(go_mf_pos_sig[, "p.adjust"])), "Description"]) + xlab("BH p-value") + ylab("") + theme_classic(16) + scale_fill_gradientn(colours=brewer.pal(9,"Reds"))
 dev.off()
 
-pdf("Report/release/K562TPA/CumulCurves/ABreadCmate5EndFiltered_ge20_le0.1_strict/FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman_-0.9_enrich_GO_MF.pdf", height = 8, width = 16)
+pdf("Report/K562TPA/CumulCurves/ABreadCmate5EndFiltered_ge20_le0.1_strict/FoldEnrichTSSflank5kLibNormCnts_GeneExt_spearman_-0.9_enrich_GO_MF.pdf", height = 8, width = 16)
 ggplot(go_mf_neg_sig, aes(y = Description, x = p.adjust, fill = log2(OddsRatio))) + geom_bar(stat = "identity") + scale_y_discrete(limits = go_mf_neg_sig[rev(order(go_mf_neg_sig[, "p.adjust"])), "Description"]) + xlab("BH p-value") + ylab("") + theme_classic(16) + scale_fill_gradientn(colours = brewer.pal(9,"Blues"))
 dev.off()

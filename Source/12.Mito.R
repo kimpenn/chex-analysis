@@ -8,10 +8,10 @@
 ## License, v. 2.0. If a copy of the MPL was not distributed with this
 ## file, You can obtain one at http://mozilla.org/MPL/2.0/.
 ###########################################################################
-source("Source/release/functions.R")
+source("Source/functions.R")
 
-EnsFeatures <- readRDS("Data/release/GenomicFeatures/EnsFeatures.RDS")
-EnsFeatureIDsChrM <- readRDS("Data/release/GenomicFeatures/EnsFeatureIDsChrM.RDS")
+EnsFeatures <- readRDS("Data/GenomicFeatures/EnsFeatures.RDS")
+EnsFeatureIDsChrM <- readRDS("Data/GenomicFeatures/EnsFeatureIDsChrM.RDS")
 EnsGeneIDsChrM <- list(human = EnsFeatureIDsChrM$human$Gene, mouse = EnsFeatureIDsChrM$mouse$Gene, rat = EnsFeatureIDsChrM$rat$Gene, none = EnsFeatureIDsChrM$mouse$Gene)
 EnsSymbolsChrM <- list(human = mcols(EnsFeatures$Gene$human[EnsGeneIDsChrM$human])[["symbol"]], 
                        mouse = mcols(EnsFeatures$Gene$mouse[EnsGeneIDsChrM$mouse])[["symbol"]], 
@@ -29,7 +29,7 @@ rownames(EnsFeaturesGene_mouse_mito_df) <- EnsFeaturesGene_mouse_mito_df$symbol
 EnsFeaturesGene_mouse_mito_df$Color <- rep(c("green", "grey", "yellow", "grey", "orange", "grey"), c(16, 2, 4, 2, 11, 2))
 EnsFeaturesGene_mouse_mito_df$Block <- c("grey" = "Gap", "green" = "Region1", "yellow" = "Region2", "orange" = "Region3")[as.character(EnsFeaturesGene_mouse_mito_df$Color)]
 
-SampleInfoFull <- read.csv("Data/release/SampleInfoFullOutAnnotated20201221CV2b.csv", as.is = TRUE, check.names = FALSE)
+SampleInfoFull <- read.csv("Data/SampleInfoFullOutAnnotated20201221CV2b.csv", as.is = TRUE, check.names = FALSE)
 SampleInfoFull <- subset(SampleInfoFull, IsOut == "N")
 sampleIDsFull <- rownames(SampleInfoFull) <- SampleInfoFull[["SampleID"]]
 SampleInfo <- subset(SampleInfoFull, CompType == "Biol")
@@ -46,10 +46,10 @@ sampleIDsFullByBioGroup <- sapply(bioGroups, function(bioGroup) subset(SampleInf
 
 qualOutInPair <- "ABreadCmate5End"
 mapqTh <- "ge20_le0.1_strict"
-dirname <- sprintf("Report/release/Mito/%s_%s", qualOutInPair, mapqTh)
+dirname <- sprintf("Report/Mito/%s_%s", qualOutInPair, mapqTh)
 dir.create(dirname, FALSE, TRUE)
 
-filename <- sprintf("Data/release/PrimingRateGene/PFs%sFiltered_%s.RDS", qualOutInPair, mapqTh)
+filename <- sprintf("Data/PrimingRateGene/PFs%sFiltered_%s.RDS", qualOutInPair, mapqTh)
 PFs <- readRDS(filename)
 
 ###########################################################################
@@ -71,7 +71,7 @@ PFs_mito_human_Gene <- PFs_mito_human_Gene[, sampleIDs_human_sorted]
 
 colnames(PFs_mito_human_Gene) <- with(SampleInfo_human[colnames(PFs_mito_human_Gene), ], paste(sub("^Human", "", BioGroup), Composition, sub("scCLTdegenNuc", "#", SampleID), sep = "_"))
 PFs_mito_human_Gene_df <- data.frame(EnsFeaturesGene_human_mito_df[EnsSymbolsChrM$human, c("start", "end", "width", "strand")], PFs_mito_human_Gene[EnsSymbolsChrM$human, ], check.names = FALSE, stringsAsFactors = FALSE)
-dirname <- sprintf("Report/release/Mito/%s_%s", qualOutInPair, mapqTh)
+dirname <- sprintf("Report/Mito/%s_%s", qualOutInPair, mapqTh)
 filename <- sprintf("%s/PFs_mito_human_Gene.csv", dirname)
 write.csv(PFs_mito_human_Gene_df, file = filename)
 
@@ -84,7 +84,7 @@ SampleInfo_mouse$Composition <- factor(SampleInfo_mouse$Composition, levels = c(
 
 colnames(PFs_mito_mouse_Gene) <- with(SampleInfo_mouse[colnames(PFs_mito_mouse_Gene), ], paste(sub("^Mouse", "", BioGroup), Composition, sub("scCLTdegenNuc", "#", SampleID), sep = "_"))
 PFs_mito_mouse_Gene_df <- data.frame(EnsFeaturesGene_mouse_mito_df[EnsSymbolsChrM$mouse, c("start", "end", "width", "strand")], PFs_mito_mouse_Gene[EnsSymbolsChrM$mouse, ], check.names = FALSE, stringsAsFactors = FALSE)
-dirname <- sprintf("Report/release/Mito/%s_%s", qualOutInPair, mapqTh)
+dirname <- sprintf("Report/Mito/%s_%s", qualOutInPair, mapqTh)
 filename <- sprintf("%s/PFs_mito_mouse_Gene.csv", dirname)
 write.csv(PFs_mito_mouse_Gene_df, file = filename)
 
@@ -93,7 +93,7 @@ write.csv(PFs_mito_mouse_Gene_df, file = filename)
 ###########################################################################
 qualOutInPair <- "ABreadCmate5End"
 mapqTh <- "ge20_le0.1_strict"
-filename <- sprintf("Data/release/PrimingRate/GRs%sFiltered_%s.RDS", qualOutInPair, mapqTh)
+filename <- sprintf("Data/PrimingRate/GRs%sFiltered_%s.RDS", qualOutInPair, mapqTh)
 
 GRs <- readRDS(filename)
 GRsVirtual <- sapply(sampleIDsVirtual, function(x) {
@@ -210,7 +210,7 @@ cnts_dloop_perbase_mouse_df$BioGroup <- factor(cnts_dloop_perbase_mouse_df$BioGr
 
 cnts_dloop_perbase_df <- rbind(cnts_dloop_perbase_human_df, cnts_dloop_perbase_mouse_df)
 cnts_dloop_perbase_df$BioGroup <- factor(cnts_dloop_perbase_df$BioGroup, levels = bioGroups)
-dirname <- sprintf("Report/release/Mito/%s_%s", qualOutInPair, mapqTh)
+dirname <- sprintf("Report/Mito/%s_%s", qualOutInPair, mapqTh)
 filename <- sprintf("%s/totcnts_dloop_perbase.pdf", dirname)
 pdf(filename, height = 7, width = 5, useDingbats = FALSE)
 ggplot(cnts_dloop_perbase_df, aes(x = BioGroup, fill = Dloop, y = Perbase)) + geom_boxplot(size = 0.4, outlier.color = NA) + geom_jitter(size = 0.1) + theme_classic(base_size = 18) + theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) + ylab("Per-base density") + xlab("") + scale_y_continuous(trans = "log10")
@@ -219,7 +219,7 @@ dev.off()
 ###########################################################################
 ## Per-strand per-base coverages
 ###########################################################################
-dirname <- sprintf("Report/release/Mito/%s_%s", qualOutInPair, mapqTh)
+dirname <- sprintf("Report/Mito/%s_%s", qualOutInPair, mapqTh)
 filename <- sprintf("%s/cnts_mito_coverage_stranded_human.pdf", dirname)
 pdf(filename, height = 3.5, width = 7)
 for (bioGroup in bioGroups_human) {

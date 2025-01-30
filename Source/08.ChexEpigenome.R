@@ -8,9 +8,9 @@
 ## License, v. 2.0. If a copy of the MPL was not distributed with this
 ## file, You can obtain one at http://mozilla.org/MPL/2.0/.
 ###########################################################################
-source("Source/release/functions.R")
+source("Source/functions.R")
 
-SampleInfoFull <- read.csv("Data/release/SampleInfoFullOutAnnotated20201221CV2b.csv", as.is = TRUE, check.names = FALSE)
+SampleInfoFull <- read.csv("Data/SampleInfoFullOutAnnotated20201221CV2b.csv", as.is = TRUE, check.names = FALSE)
 rownames(SampleInfoFull) <- SampleInfoFull[["SampleID"]]
 SampleInfoFull <- subset(SampleInfoFull, IsOut == "N")
 sampleIDsFull <- SampleInfoFull[, "SampleID"]
@@ -21,14 +21,7 @@ SampleInfo <- SampleInfoFull[sampleIDs, ]
 bioGroups <- c(
     "K562", "K562TPAnone", "K562TPA15min", "K562TPA1hr", "K562TPA2hr", "K562TPA24hr", 
     "HumanAstroCulture", "HumanNeuronCulture", "HumanInterneuronCulture",
-    "MouseAstroCulture", "MouseNeuronCulture", "MouseNeuronSlice", "MouseInterneuronSlice", 
-    "MouseLungEpithelialCulture", "MouseLungEndothelialCulture",
-    "MouseKidneyEpithelialCulture",
-    "MouseCardiomyoCulture", "MouseCardiomyoSlice",
-    "RatCardiomyoCulture", 
-    "NoCell", 
-    "K562MungBean", 
-    "HBR"
+    "MouseAstroCulture", "MouseNeuronCulture", "MouseNeuronSlice", "MouseInterneuronSlice"
 )
 sampleIDsVirtmaxByBioGroup <- sapply(bioGroups, function(bioGroup) tail(subset(SampleInfoFull, (IsNegCtrl == "N" | BioGroup == "NoCell" | BioGroup == "K562MungBean" | BioGroup == "HBR") & ProbeType == "Positive" & BioGroup == bioGroup), 1)[["SampleID"]])
 
@@ -39,12 +32,12 @@ GRs_blacklisted_mouse <- Genome$standardizeSeqInfo(rtracklayer::import("Data/ENC
 
 GRsNoBlacklisted_human <- setdiff(GRs_human, GRs_blacklisted_human)
 GRsNoBlacklisted_mouse <- setdiff(GRs_mouse, GRs_blacklisted_mouse)
-rtracklayer::export(GRsNoBlacklisted_human, con = "Report/release/ChexEpigenome/gat/GRsNoBlacklisted_human.bed")
-rtracklayer::export(GRsNoBlacklisted_mouse, con = "Report/release/ChexEpigenome/gat/GRsNoBlacklisted_mouse.bed")
+rtracklayer::export(GRsNoBlacklisted_human, con = "Report/AlignmentArtifacts/GRsNoBlacklisted_human.bed")
+rtracklayer::export(GRsNoBlacklisted_mouse, con = "Report/AlignmentArtifacts/GRsNoBlacklisted_mouse.bed")
 
 qualOutInPair <- "ABreadCmate5End"
 mapqTh <- "ge20_le0.1_strict"
-GRsABreadCmate5End <- readRDS(sprintf("Data/release/PrimingRate/GRs%sFiltered_%s.RDS", qualOutInPair, mapqTh))
+GRsABreadCmate5End <- readRDS(sprintf("Data/PrimingRate/GRs%sFiltered_%s.RDS", qualOutInPair, mapqTh))
 GRsABreadCmate5EndVirtual <- sapply(sampleIDsVirtual, function(sampleID) {
     message(sampleID)
     sourceIDs <- SampleInfoFull[sampleID, "SourceIDsNoOut"]
@@ -66,7 +59,7 @@ GRsABreadCmate5EndExtFull_K562PositiveAll_reduced <- reduce(GRsABreadCmate5EndEx
 mcols(GRsABreadCmate5EndExtFull_K562PositiveAll_reduced)[["name"]] <- NULL
 GRsABreadCmate5EndExtFull_K562PositiveAll_reduced <- trim(GRsABreadCmate5EndExtFull_K562PositiveAll_reduced)
 start(GRsABreadCmate5EndExtFull_K562PositiveAll_reduced)[start(GRsABreadCmate5EndExtFull_K562PositiveAll_reduced) <= 0] <- 1
-rtracklayer::export(GRsABreadCmate5EndExtFull_K562PositiveAll_reduced, con = "Report/release/ChexEpigenome/gat/GRsABreadCmate5EndExtFull_K562PositiveAll_reduced.bed")
+rtracklayer::export(GRsABreadCmate5EndExtFull_K562PositiveAll_reduced, con = sprintf("Report/ChexEpigenome/GenomicAssocTest/%s_%s/GRsABreadCmate5EndExtFull_K562PositiveAll_reduced.bed", qualOutInPair, mapqTh))
  
 GRsABreadCmate5EndExtFull_virtmax_reduced <- lapply(bioTrtGroupsVirtmax, function(x) reduce(GRsABreadCmate5EndExtFull[[x]], ignore.strand=TRUE))
 
@@ -76,20 +69,20 @@ CvgsABreadCmate5EndExtFull <- lapply(GRsABreadCmate5EndExtFull, function(GRs) co
 ###########################################################################
 ## Load K562 epigenomes
 ###########################################################################
-K562ATACNarrowPeaks <- readRDS("Data/release/Epigenome/K562ATACNarrowPeaks.RDS")
-K562ATACBroadPeaks <- readRDS("Data/release/Epigenome/K562ATACBroadPeaks.RDS")
-K562DNaseNarrowPeaks <- readRDS("Data/release/Epigenome/K562DNaseNarrowPeaks.RDS")
-K562DNaseBroadPeaks <- readRDS("Data/release/Epigenome/K562DNaseBroadPeaks.RDS")
-K562FAIRENarrowPeaks <- readRDS("Data/release/Epigenome/K562FAIRENarrowPeaks.RDS")
-K562RRBSMethyLevels <- readRDS("Data/release/Epigenome/K562RRBSMethyLevels.RDS")
-K562RepOrigPeaks <- readRDS("Data/release/Epigenome/K562RepOrigPeaks.RDS")
-K562ChIPTFs <- readRDS("Data/release/Epigenome/K562ChIPTFs.RDS")
-K562ChIPNHMs <- readRDS("Data/release/Epigenome/K562ChIPNHMs.RDS")
-K562ChIPBHMs <- readRDS("Data/release/Epigenome/K562ChIPBHMs.RDS")
-K562SEPeaks <- readRDS("Data/release/Epigenome/K562SEPeaks.RDS")
-K562GROPeaks <- readRDS("Data/release/Epigenome/K562GROPeaks.RDS")
-K562RloopPeaks <- readRDS("Data/release/Epigenome/K562RloopPeaks.RDS")
-K562NonBDNAPeaks <- readRDS("Data/release/Epigenome/HumanNonBDNAPeaks.RDS")
+K562ATACNarrowPeaks <- readRDS("Data/Epigenome/K562ATACNarrowPeaks.RDS")
+K562ATACBroadPeaks <- readRDS("Data/Epigenome/K562ATACBroadPeaks.RDS")
+K562DNaseNarrowPeaks <- readRDS("Data/Epigenome/K562DNaseNarrowPeaks.RDS")
+K562DNaseBroadPeaks <- readRDS("Data/Epigenome/K562DNaseBroadPeaks.RDS")
+K562FAIRENarrowPeaks <- readRDS("Data/Epigenome/K562FAIRENarrowPeaks.RDS")
+K562RRBSMethyLevels <- readRDS("Data/Epigenome/K562RRBSMethyLevels.RDS")
+K562RepOrigPeaks <- readRDS("Data/Epigenome/K562RepOrigPeaks.RDS")
+K562ChIPTFs <- readRDS("Data/Epigenome/K562ChIPTFs.RDS")
+K562ChIPNHMs <- readRDS("Data/Epigenome/K562ChIPNHMs.RDS")
+K562ChIPBHMs <- readRDS("Data/Epigenome/K562ChIPBHMs.RDS")
+K562SEPeaks <- readRDS("Data/Epigenome/K562SEPeaks.RDS")
+K562GROPeaks <- readRDS("Data/Epigenome/K562GROPeaks.RDS")
+K562RloopPeaks <- readRDS("Data/Epigenome/K562RloopPeaks.RDS")
+K562NonBDNAPeaks <- readRDS("Data/Epigenome/HumanNonBDNAPeaks.RDS")
 
 K562coreChIPTFs <- c("CTCF", "MYC", "POLR2A", "POLR2B", "GATA1", "GATA2")
 K562coreChIPNHMs <- c("H3K27ac", "H3K4me3", "H3K9ac", "H3K4me2", "H2AFZ")
@@ -163,7 +156,7 @@ bPRsListK562ChexEpiCore <- lapply(PRsListK562ChexEpiCore, function(X) { X <- X >
 
 bPRsListK562ChexEpiCoreJac <- sapply(binsizeLabs, function(binsizeLab) sapply(assaysCore, function(j) sapply(assaysCore, function(i) { message(binsizeLab, " ", j, " ", i); x <- bPRsListK562ChexEpiCore[[binsizeLab]][, i]; y <- bPRsListK562ChexEpiCore[[binsizeLab]][, j]; z <- x + y; sum(z == 2)/sum(z == 1 | z == 2) })), simplify = FALSE)
 
-dirname <- sprintf("Report/release/ChexEpigenome/AssaysOverlap/HclustHeatmap/%s_%s", qualOutInPair, mapqTh)
+dirname <- sprintf("Report/ChexEpigenome/AssaysOverlap/HclustHeatmap/%s_%s", qualOutInPair, mapqTh)
 dir.create(dirname, FALSE, TRUE)
 for (binsizeLab in binsizeLabs) {
     write.csv(bPRsListK562ChexEpiCoreJac[[binsizeLab]], file = sprintf("%s/bPRsListK562ChexEpiCoreJacSim_%s.csv", dirname, binsizeLab))
@@ -188,7 +181,7 @@ colorsExt[c("ATAC", "DNase", "FAIRE", "CHEX")] <- pal
 cexExt <- ifelse(assaysExt %in% assaysCore, 1, 0.6)
 names(cexExt) <- assaysExt
 
-dirname <- sprintf("Report/release/ChexEpigenome/GenomicAssocTest/%s_%s", qualOutInPair, mapqTh)
+dirname <- sprintf("Report/ChexEpigenome/AssaysOverlap/HclustHeatmap/%s_%s", qualOutInPair, mapqTh)
 pdf(sprintf("%s/bPRsListK562ChexEpiCoreHclust_Jaccard.pdf", dirname), height = 7, width = 5)
 for (binsizeLab in binsizeLabs) {
     hc <- bPRsListK562ChexEpiCoreJacHclusts[[binsizeLab]]
@@ -200,18 +193,18 @@ dev.off()
 ###########################################################################
 ## Load extended K562 epigenomes
 ###########################################################################
-K562ATACNarrowPeaks <- readRDS("Data/release/Epigenome/K562ATACNarrowPeaks.RDS")
-K562DNaseNarrowPeaks <- readRDS("Data/release/Epigenome/K562DNaseNarrowPeaks.RDS")
-K562FAIRENarrowPeaks <- readRDS("Data/release/Epigenome/K562FAIRENarrowPeaks.RDS")
-K562RRBSMethyLevels <- readRDS("Data/release/Epigenome/K562RRBSMethyLevels.RDS")
-K562RepOrigPeaks <- readRDS("Data/release/Epigenome/K562RepOrigPeaks.RDS")
-K562SEPeaks <- readRDS("Data/release/Epigenome/K562SEPeaks.RDS")
-K562GROPeaks <- readRDS("Data/release/Epigenome/K562GROPeaks.RDS")
-K562RloopPeaks <- readRDS("Data/release/Epigenome/K562RloopPeaks.RDS")
-K562NonBDNAPeaks <- readRDS("Data/release/Epigenome/K562NonBDNAPeaks.RDS")
-K562ChIPNHMs <- readRDS("Data/release/Epigenome/K562ChIPNHMs.RDS")
-K562ChIPBHMs <- readRDS("Data/release/Epigenome/K562ChIPBHMs.RDS")
-K562ChIPTFs <- readRDS("Data/release/Epigenome/K562ChIPTFs.RDS")
+K562ATACNarrowPeaks <- readRDS("Data/Epigenome/K562ATACNarrowPeaks.RDS")
+K562DNaseNarrowPeaks <- readRDS("Data/Epigenome/K562DNaseNarrowPeaks.RDS")
+K562FAIRENarrowPeaks <- readRDS("Data/Epigenome/K562FAIRENarrowPeaks.RDS")
+K562RRBSMethyLevels <- readRDS("Data/Epigenome/K562RRBSMethyLevels.RDS")
+K562RepOrigPeaks <- readRDS("Data/Epigenome/K562RepOrigPeaks.RDS")
+K562SEPeaks <- readRDS("Data/Epigenome/K562SEPeaks.RDS")
+K562GROPeaks <- readRDS("Data/Epigenome/K562GROPeaks.RDS")
+K562RloopPeaks <- readRDS("Data/Epigenome/K562RloopPeaks.RDS")
+K562NonBDNAPeaks <- readRDS("Data/Epigenome/K562NonBDNAPeaks.RDS")
+K562ChIPNHMs <- readRDS("Data/Epigenome/K562ChIPNHMs.RDS")
+K562ChIPBHMs <- readRDS("Data/Epigenome/K562ChIPBHMs.RDS")
+K562ChIPTFs <- readRDS("Data/Epigenome/K562ChIPTFs.RDS")
 K562Epigenomes <- list(
     ATAC = K562ATACNarrowPeaks$K562UntreatedAll, 
     DNase = K562DNaseNarrowPeaks$Rep1, 
@@ -235,17 +228,6 @@ K562Epigenomes <- list(
 K562Epigenomes <- c(K562Epigenomes, K562ChIPBHMs, K562ChIPNHMs)
 K562Epigenomes <- c(K562Epigenomes, "names<-"(K562ChIPTFs, paste0("TF_", names(K562ChIPTFs))))
 
-
-GRs_blacklisted_human <- rtracklayer::import("Data/ENCODE/Blacklist/Kundaje/hg38.blacklist.bed")
-GRs_blacklisted_human <- Genome$standardizeSeqInfo(GRs_blacklisted_human, seqInfo = Genome$MainSeqInfo$human, prune = TRUE, seqLevels = Genome$MainSeqLevels$human)
-GRs_blacklisted_mouse <- rtracklayer::import("Data/ENCODE/Blacklist/Kundaje/mm10.blacklist.bed")
-GRs_blacklisted_mouse <- Genome$standardizeSeqInfo(GRs_blacklisted_mouse, seqInfo = Genome$MainSeqInfo$mouse, prune = TRUE, seqLevels = Genome$MainSeqLevels$mouse)
-
-GRs_human <- GRanges(seqnames = seqnames(Genome$MainSeqInfo$human), IRanges(start = 1, end = seqlengths(Genome$MainSeqInfo$human)), seqinfo = Genome$MainSeqInfo$human)
-GRs_mouse <- GRanges(seqnames = seqnames(Genome$MainSeqInfo$mouse), IRanges(start = 1, end = seqlengths(Genome$MainSeqInfo$mouse)), seqinfo = Genome$MainSeqInfo$mouse)
-GRsNoBlacklisted_human <- setdiff(GRs_human, GRs_blacklisted_human)
-GRsNoBlacklisted_mouse <- setdiff(GRs_mouse, GRs_blacklisted_mouse)
-
 ncores <- 10
 epigenomes <- names(K562Epigenomes)
 K562AssayEpiAssoc <- sapply(c("CHEX", "ATAC", "DNase", "FAIRE"), function(a) {
@@ -262,7 +244,7 @@ K562AssayEpiAssoc <- sapply(c("CHEX", "ATAC", "DNase", "FAIRE"), function(a) {
     res
 }, simplify = FALSE)
 K562AssayEpiOddsRatio <- sapply(K562AssayEpigenomeAssoc, function(X) sapply(X, function(x) unname(x[1])))
-dirname <- sprintf("Report/release/ChexEpigenome/GenomicAssocTest/%s_%s", qualOutInPair, mapqTh)
+dirname <- sprintf("Report/ChexEpigenome/GenomicAssocTest/%s_%s", qualOutInPair, mapqTh)
 dir.create(dirname, FALSE, TRUE)
 write.csv(K562AssayEpiOddsRatio, file = sprintf("%s/K562AssayEpiLog2oddsRatio.csv", dirname))
 
@@ -281,11 +263,11 @@ dev.off()
 bioGroups_human <- c("HumanAstroCulture", "HumanNeuronCulture", "HumanInterneuronCulture")
 sampleIDsVirtmax_human <- sampleIDsVirtmaxByBioGroup[bioGroups_human]
 
-HumanBrainATACNarrowPeaks <- readRDS("Data/release/Epigenome/HumanBrainATACNarrowPeaks.RDS")
-HumanBrainDNaseNarrowPeaks <- readRDS("Data/release/Epigenome/HumanBrainDNaseNarrowPeaks.RDS")
+HumanBrainATACNarrowPeaks <- readRDS("Data/Epigenome/HumanBrainATACNarrowPeaks.RDS")
+HumanBrainDNaseNarrowPeaks <- readRDS("Data/Epigenome/HumanBrainDNaseNarrowPeaks.RDS")
 HumanBrainDNaseNarrowPeaks <- lapply(HumanBrainDNaseNarrowPeaks, function(X) Reduce(union, X))
-HumanBrainFAIRENarrowPeaks <- readRDS("Data/release/Epigenome/HumanBrainFAIRENarrowPeaks.RDS")
-HumanNonBDNAPeaks <- readRDS(file = "Data/release/Epigenome/HumanNonBDNAPeaks.RDS")
+HumanBrainFAIRENarrowPeaks <- readRDS("Data/Epigenome/HumanBrainFAIRENarrowPeaks.RDS")
+HumanNonBDNAPeaks <- readRDS(file = "Data/Epigenome/HumanNonBDNAPeaks.RDS")
 
 names(HumanBrainATACNarrowPeaks) <- paste0("HumanBrainATACNarrowPeaks_", names(HumanBrainATACNarrowPeaks))
 names(HumanBrainDNaseNarrowPeaks) <- paste0("HumanBrainDNaseNarrowPeaks_", names(HumanBrainDNaseNarrowPeaks))
@@ -293,11 +275,6 @@ names(HumanBrainFAIRENarrowPeaks) <- paste0("HumanBrainFAIRENarrowPeaks_", names
 names(HumanNonBDNAPeaks) <- paste0("HumanNonBDNAPeaks_", names(HumanNonBDNAPeaks))
 
 HumanBrainEpigenomes <- c(HumanBrainATACNarrowPeaks, HumanBrainDNaseNarrowPeaks, HumanBrainFAIRENarrowPeaks, HumanNonBDNAPeaks)
-
-GRs_human <- GRanges(seqnames = seqnames(Genome$MainSeqInfo$human), IRanges(start = 1, end = seqlengths(Genome$MainSeqInfo$human)), seqinfo = Genome$MainSeqInfo$human)
-GRs_blacklisted_human <- rtracklayer::import("Data/ENCODE/Blacklist/Kundaje/hg38.blacklist.bed")
-GRs_blacklisted_human <- Genome$standardizeSeqInfo(GRs_blacklisted_human, seqInfo = Genome$MainSeqInfo$human, prune = TRUE, seqLevels = Genome$MainSeqLevels$human)
-GRsNoBlacklisted_human <- setdiff(GRs_human, GRs_blacklisted_human)
 
 epigenomes_human <- names(HumanBrainEpigenomes)
 HumanBrainAssayEpiAssoc <- sapply(sampleIDsVirtmax_human, function(a) {
@@ -313,14 +290,12 @@ HumanBrainAssayEpiAssoc <- sapply(sampleIDsVirtmax_human, function(a) {
 ## get log2OR and pval
 HumanBrainAssayEpiOddsRatio <- sapply(HumanBrainAssayEpiAssoc, function(X) sapply(X, function(x) unname(x[1])))
 HumanBrainAssayEpiPval <- sapply(HumanBrainAssayEpiAssoc, function(X) sapply(X, function(x) unname(x[2])))
-write.csv(HumanBrainAssayEpiOddsRatio, file = "Report/release/ChexEpigenome/GenomicAssocTest/ABreadCmate5End_ge20_le0.1_strict/HumanBrainAssayEpiOddsRatio.csv")
-write.csv(HumanBrainAssayEpiPval, file = "Report/release/ChexEpigenome/GenomicAssocTest/ABreadCmate5End_ge20_le0.1_strict/HumanBrainAssayEpiPval.csv")
-HumanBrainAssayEpiOddsRatio <- read.csv(file = "Report/release/ChexEpigenome/GenomicAssocTest/ABreadCmate5End_ge20_le0.1_strict/HumanBrainAssayEpiOddsRatio.csv", row.names = 1)
-HumanBrainAssayEpiPval <- read.csv(file = "Report/release/ChexEpigenome/GenomicAssocTest/ABreadCmate5End_ge20_le0.1_strict/HumanBrainAssayEpiPval.csv", row.names = 1)
+write.csv(HumanBrainAssayEpiOddsRatio, file = sprintf("Report/ChexEpigenome/GenomicAssocTest/%s_%s/HumanBrainAssayEpiOddsRatio.csv", qualOutInPair, mapqTh))
+write.csv(HumanBrainAssayEpiPval, file = sprintf("Report/ChexEpigenome/GenomicAssocTest/%s_%s/HumanBrainAssayEpiPval.csv", qualOutInPair, mapqTh))
 
 rownames(HumanBrainAssayEpiOddsRatio) <- gsub("HumanBrain|NarrowPeaks|ChIPNHMs_|ChIPBHMs_", "", rownames(HumanBrainAssayEpiOddsRatio))
 rownames(HumanBrainAssayEpiOddsRatio) <- gsub("HumanNonBDNAPeaks", "NonBDNA", rownames(HumanBrainAssayEpiOddsRatio))
-pdf("Report/release/ChexEpigenome/GenomicAssocTest/ABreadCmate5End_ge20_le0.1_strict/HumanBrainAssayEpiOddsRatio_brain-nonbdna_heatmap.pdf", width = 5, height = 6)
+pdf(sprintf("Report/ChexEpigenome/GenomicAssocTest/%s_%s/HumanBrainAssayEpiOddsRatio_brain-nonbdna_heatmap.pdf", qualOutInPair, mapqTh), width = 5, height = 6)
 pheatmap(HumanBrainAssayEpiOddsRatio, col = colorRampPalette(rev(brewer.pal(9, "RdBu")))(255), breaks = seq(-max(abs(HumanBrainAssayEpiOddsRatio)), max(abs(HumanBrainAssayEpiOddsRatio)), length.out = 255), angle = 45, cellheight = 12, cellwidth = 12, border = NA)
 dev.off()
 
@@ -330,20 +305,14 @@ dev.off()
 bioGroups_mouse <- c("MouseAstroCulture", "MouseNeuronCulture", "MouseNeuronSlice", "MouseInterneuronSlice")
 sampleIDsVirtmax_mouse <- sampleIDsVirtmaxByBioGroup[bioGroups_mouse]
 
-GRs_mouse <- GRanges(seqnames = seqnames(Genome$MainSeqInfo$mouse), IRanges(start = 1, end = seqlengths(Genome$MainSeqInfo$mouse)), seqinfo = Genome$MainSeqInfo$mouse)
-GRs_blacklisted_mouse <- rtracklayer::import("Data/ENCODE/Blacklist/Kundaje/mm10.blacklist.bed")
-GRs_blacklisted_mouse <- Genome$standardizeSeqInfo(GRs_blacklisted_mouse, seqInfo = Genome$MainSeqInfo$mouse, prune = TRUE, seqLevels = Genome$MainSeqLevels$mouse)
-GRsNoBlacklisted_mouse <- setdiff(GRs_mouse, GRs_blacklisted_mouse)
-
-
-MouseBrainATACNarrowPeaks <- readRDS(file = "Data/release/Epigenome/MouseBrainATACNarrowPeaks.RDS")
-MouseBrainDNaseNarrowPeaks <- readRDS("Data/release/Epigenome/MouseBrainDNaseNarrowPeaks.RDS")
-MouseBrainChIPTFs <- readRDS(file = "Data/release/Epigenome/MouseBrainChIPTFs.RDS")
-MouseBrainChIPNHMs <- readRDS(file = "Data/release/Epigenome/MouseBrainChIPNHMs.RDS")
-MouseBrainChIPBHMs <- readRDS(file = "Data/release/Epigenome/MouseBrainChIPBHMs.RDS")
-MouseBrainSEPeaks <- readRDS(file = "Data/release/Epigenome/MouseBrainSEPeaks.RDS")
+MouseBrainATACNarrowPeaks <- readRDS(file = "Data/Epigenome/MouseBrainATACNarrowPeaks.RDS")
+MouseBrainDNaseNarrowPeaks <- readRDS("Data/Epigenome/MouseBrainDNaseNarrowPeaks.RDS")
+MouseBrainChIPTFs <- readRDS(file = "Data/Epigenome/MouseBrainChIPTFs.RDS")
+MouseBrainChIPNHMs <- readRDS(file = "Data/Epigenome/MouseBrainChIPNHMs.RDS")
+MouseBrainChIPBHMs <- readRDS(file = "Data/Epigenome/MouseBrainChIPBHMs.RDS")
+MouseBrainSEPeaks <- readRDS(file = "Data/Epigenome/MouseBrainSEPeaks.RDS")
 ## We finally excluded VISTA as they are too sparse.
-MouseNonBDNAPeaks <- readRDS(file = "Data/release/Epigenome/MouseNonBDNAPeaks.RDS")
+MouseNonBDNAPeaks <- readRDS(file = "Data/Epigenome/MouseNonBDNAPeaks.RDS")
 
 names(MouseBrainATACNarrowPeaks) <- paste0("MouseBrainATACNarrowPeaks_", names(MouseBrainATACNarrowPeaks))
 names(MouseBrainDNaseNarrowPeaks) <- paste0("MouseBrainDNaseNarrowPeaks_", names(MouseBrainDNaseNarrowPeaks))
@@ -384,15 +353,12 @@ MouseBrainAssayEpiAssoc <- sapply(sampleIDsVirtmax_mouse, function(a) {
 ## get log2OR and pval
 MouseBrainAssayEpiOddsRatio <- sapply(MouseBrainAssayEpiAssoc, function(X) sapply(X, function(x) unname(x[1])))
 MouseBrainAssayEpiPval <- sapply(MouseBrainAssayEpiAssoc, function(X) sapply(X, function(x) unname(x[2])))
-write.csv(MouseBrainAssayEpiOddsRatio, file = "Report/release/ChexEpigenome/GenomicAssocTest/ABreadCmate5End_ge20_le0.1_strict/MouseBrainAssayEpiOddsRatio.csv")
-write.csv(MouseBrainAssayEpiPval, file = "Report/release/ChexEpigenome/GenomicAssocTest/ABreadCmate5End_ge20_le0.1_strict/MouseBrainAssayEpiPval.csv")
-
-MouseBrainAssayEpiOddsRatio <- read.csv(file = "Report/release/ChexEpigenome/GenomicAssocTest/ABreadCmate5End_ge20_le0.1_strict/MouseBrainAssayEpiOddsRatio.csv", row.names = 1)
-MouseBrainAssayEpiPval <- read.csv(file = "Report/release/ChexEpigenome/GenomicAssocTest/ABreadCmate5End_ge20_le0.1_strict/MouseBrainAssayEpiPval.csv", row.names = 1)
+write.csv(MouseBrainAssayEpiOddsRatio, file = sprintf("Report/ChexEpigenome/GenomicAssocTest/%s_%s/MouseBrainAssayEpiOddsRatio.csv", qualOutInPair, mapqTh))
+write.csv(MouseBrainAssayEpiPval, file = sprintf("Report/ChexEpigenome/GenomicAssocTest/%s_%s/MouseBrainAssayEpiPval.csv", qualOutInPair, mapqTh))
 
 MouseBrainAssayEpiOddsRatio <- MouseBrainAssayEpiOddsRatio[grepl("NonBDNA|Adult", rownames(MouseBrainAssayEpiOddsRatio)), ]
 rownames(MouseBrainAssayEpiOddsRatio) <- gsub("MouseBrain|NarrowPeaks|ChIPNHMs_|ChIPBHMs_", "", rownames(MouseBrainAssayEpiOddsRatio))
 rownames(MouseBrainAssayEpiOddsRatio) <- gsub("MouseNonBDNAPeaks", "NonBDNA", rownames(MouseBrainAssayEpiOddsRatio))
-pdf("Report/release/ChexEpigenome/GenomicAssocTest/ABreadCmate5End_ge20_le0.1_strict/MouseBrainAssayEpiOddsRatio_adultchip-nonbdna_heatmap.pdf", width = 7, height = 6)
+pdf(sprintf("Report/ChexEpigenome/GenomicAssocTest/%s_%s/MouseBrainAssayEpiOddsRatio_adultchip-nonbdna_heatmap.pdf", qualOutInPair, mapqTh), width = 7, height = 6)
 pheatmap(MouseBrainAssayEpiOddsRatio, col = colorRampPalette(rev(brewer.pal(9, "RdBu")))(255), breaks = seq(-max(abs(MouseBrainAssayEpiOddsRatio)), max(abs(MouseBrainAssayEpiOddsRatio)), length.out = 255), angle = 45, cellheight = 12, cellwidth = 12, border = NA)
 dev.off()

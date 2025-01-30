@@ -8,18 +8,18 @@
 ## License, v. 2.0. If a copy of the MPL was not distributed with this
 ## file, You can obtain one at http://mozilla.org/MPL/2.0/.
 ###########################################################################
-source("Source/release/functions.R")
+source("Source/functions.R")
 
-EnsFeatures <- readRDS("Data/release/GenomicFeatures/EnsFeatures.RDS")
-EnsFlanksByGene <- readRDS("Data/release/GenomicFeatures/EnsFlanksByGene.RDS")
-EnsFeatureIDsProt <- readRDS("Data/release/GenomicFeatures/EnsFeatureIDsProt.RDS")
+EnsFeatures <- readRDS("Data/GenomicFeatures/EnsFeatures.RDS")
+EnsFlanksByGene <- readRDS("Data/GenomicFeatures/EnsFlanksByGene.RDS")
+EnsFeatureIDsProt <- readRDS("Data/GenomicFeatures/EnsFeatureIDsProt.RDS")
 Species <- c("human", "mouse")
 featureTypesByGene <- c("FlankUp5kByGene", "FlankDn5kByGene", "ExonByGene", "IntronByGene")
 EnsFeaturesByGene <- sapply(Species, function(species) sapply(featureTypesByGene, function(featureTypeByGene) { message(species, " ", featureTypeByGene); EnsFeatures[[featureTypeByGene]][[species]] }, simplify = FALSE), simplify = FALSE)
 EnsGeneIDsProt <- lapply(EnsFeatureIDsProt, function(X) X[["Gene"]])
 EnsIDToSymbolMap <- sapply(Species, function(species) structure(mcols(EnsFeatures[["Gene"]][[species]])[["symbol"]], names = names(EnsFeatures[["Gene"]][[species]])), simplify = FALSE)
 
-SampleInfoFull <- read.csv("Data/release/SampleInfoFullOutAnnotated20201221CV2b.csv", as.is = TRUE, check.names = FALSE)
+SampleInfoFull <- read.csv("Data/SampleInfoFullOutAnnotated20201221CV2b.csv", as.is = TRUE, check.names = FALSE)
 sampleIDsFull <- rownames(SampleInfoFull) <- SampleInfoFull[["SampleID"]]
 
 ## limit to the samples we finally decided to include
@@ -51,7 +51,7 @@ mapqThs <- c("ge30_le0.1", "ge20_le0.1_strict", "ge20_le0.1", "ge10_le0.1")[2]
 
 GRsFiltered <- sapply(mapqThs, function(th) {
     sapply(qualOutInPairs, function(qualOutInPair) {
-        filename <- sprintf("Data/release/PrimingRate/GRs%sFiltered_%s.RDS", qualOutInPair, th)
+        filename <- sprintf("Data/PrimingRate/GRs%sFiltered_%s.RDS", qualOutInPair, th)
         message(filename)
         readRDS(filename)
     }, simplify = FALSE)
@@ -61,11 +61,11 @@ GRsFiltered <- sapply(mapqThs, function(th) {
 ## Get 5End read counts per featureTypeByGene
 ## We cannot test intergenic, because it is not stranded.
 ###########################################################################
-dirname <- "Data/release/Strandedness"
+dirname <- "Data/Strandedness"
 dir.create(dirname, FALSE, TRUE)
 for (mapqTh in mapqThs) {
     for (qualOutInPair in qualOutInPairs) {
-        filename <- sprintf("Data/release/Strandedness/PFs%sFilteredEnsIDStranded_%s.RDS", qualOutInPair, mapqTh)
+        filename <- sprintf("Data/Strandedness/PFs%sFilteredEnsIDStranded_%s.RDS", qualOutInPair, mapqTh)
         X <- sapply(Species, function(species) {
             SIDs <- subset(SampleInfoFull[sampleIDsPositive, ], Species == species)[["SampleID"]]
             sapply(featureTypesByGene, function(featureTypeByGene) {
@@ -85,7 +85,7 @@ for (mapqTh in mapqThs) {
 
 PFsFilteredEnsIDStranded <- sapply(mapqThs, function(mapqTh) 
     sapply(qualOutInPairs, function(qualOutInPair) {
-        filename <- sprintf("Data/release/Strandedness/PFs%sFilteredEnsIDStranded_%s.RDS", qualOutInPair, mapqTh)
+        filename <- sprintf("Data/Strandedness/PFs%sFilteredEnsIDStranded_%s.RDS", qualOutInPair, mapqTh)
         message(filename)
         readRDS(filename)
     }, simplify = FALSE)
@@ -126,7 +126,7 @@ PFsFilteredEnsIDStranded_TotCntRatios <- sapply(mapqThs, function(mapqTh)
     }, simplify = FALSE)
 , simplify = FALSE)
 
-dirname <- "Report/release/Strandedness"
+dirname <- "Report/Strandedness"
 dir.create(dirname, FALSE, TRUE)
 for (qualOutInPair in qualOutInPairs)
     for (mapqTh in mapqThs) {
@@ -142,7 +142,7 @@ for (qualOutInPair in qualOutInPairs) {
         df$SampleID <- as.character(df$SampleID)
         df$BioGroup <- factor(SampleInfoFull[df[["SampleID"]], "BioGroup"], levels = bioGroups)
         df$TrtGroup <- factor(c("Single" = "Single", "Pooled" = "Population")[sub("^Positive", "", SampleInfoFull[df[["SampleID"]], "TrtGroup"])], levels = c("Single", "Population"))
-        filename <- sprintf("Report/release/Strandedness/PFs%sFilteredEnsIDStranded_TotCntRatios_%s_violin.pdf",qualOutInPair, mapqTh)
+        filename <- sprintf("Report/Strandedness/PFs%sFilteredEnsIDStranded_TotCntRatios_%s_violin.pdf",qualOutInPair, mapqTh)
         fig <- ggplot(df, aes(x = FeatureTypeByGene, y = log2(AntisenseToSense))) + geom_violin(lwd = 0.2) + geom_signif(comparisons = list(c("FlankUp5kByGene", "FlankDn5kByGene")), test = "wilcox.test", test.args = list(alternative = "two.sided"), textsize = 2, margin_top = +0.05, map_signif_level = FALSE)  + geom_signif(comparisons = list(c("ExonByGene", "IntronByGene")), test = "wilcox.test", test.args = list(alternative = "two.sided"), textsize = 2, margin_top = +0.05, map_signif_level = FALSE) + theme_classic(base_size = 8) + theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1), legend.key.size = unit(0.1, "in"), legend.text= element_text(size = 6)) + geom_jitter(data = df, aes(color = BioGroup, shape = TrtGroup), size = 0.2) + xlab("") + ylab("Log2 antisense-to-sense ratio (total counts)") + scale_x_discrete(limits = featureTypesByGene, labels = sub("ByGene$", "", featureTypesByGene))  + geom_hline(yintercept = 0, linetype = "dashed", size = 0.2) + guides(color = guide_legend(title = ""), shape = guide_legend(title = "")) 
         ggsave(fig, filename = filename, width = 3, height = 3, useDingbats = FALSE)
     }

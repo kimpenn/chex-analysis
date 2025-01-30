@@ -8,9 +8,9 @@
 ## License, v. 2.0. If a copy of the MPL was not distributed with this
 ## file, You can obtain one at http://mozilla.org/MPL/2.0/.
 ###########################################################################
-source("Source/release/functions.R")
+source("Source/functions.R")
 
-SampleInfoFull <- read.csv("Data/release/SampleInfoFullOutAnnotated20201221CV2b.csv", as.is = TRUE, check.names = FALSE)
+SampleInfoFull <- read.csv("Data/SampleInfoFullOutAnnotated20201221CV2b.csv", as.is = TRUE, check.names = FALSE)
 SampleInfofull <- subset(SampleInfoFull, IsOut == "N")
 sampleIDsFull <- rownames(SampleInfoFull) <- SampleInfoFull[, "SampleID"]
 sampleIDsVirtual <- subset(SampleInfoFull, CompType == "Virtual")[, "SampleID"]
@@ -22,14 +22,7 @@ SampleInfo <- SampleInfoFull[sampleIDs, ]
 bioGroups <- c(
     "K562", "K562TPAnone", "K562TPA15min", "K562TPA1hr", "K562TPA2hr", "K562TPA24hr", 
     "HumanAstroCulture", "HumanNeuronCulture", "HumanInterneuronCulture",
-    "MouseAstroCulture", "MouseNeuronCulture", "MouseNeuronSlice", "MouseInterneuronSlice", 
-    "MouseLungEpithelialCulture", "MouseLungEndothelialCulture",
-    "MouseKidneyEpithelialCulture",
-    "MouseCardiomyoCulture", "MouseCardiomyoSlice",
-    "RatCardiomyoCulture", 
-    "NoCell", 
-    "K562MungBean", 
-    "HBR"
+    "MouseAstroCulture", "MouseNeuronCulture", "MouseNeuronSlice", "MouseInterneuronSlice"
 )
 trtGroups <- c(
     "NegCtrlNone", "NegCtrlSingle", "NegCtrlPooled", "NegCtrlNil", "NegCtrlMerged", "NegCtrlAll", 
@@ -81,7 +74,7 @@ CvgsPerFeatureConfig <- tibble(
 ###########################################################################
 ## Load Avg and SEM matrices
 ###########################################################################
-inDir <- "Report/release/Profiles"
+inDir <- "Report/Profiles"
 CvgsABreadCmate5EndExtFullList <- list(Avg = vector("list", nrow(CvgsPerFeatureConfig)), SEM = vector("list", nrow(CvgsPerFeatureConfig)))
 for (i in 1:nrow(CvgsPerFeatureConfig)) {
     with(CvgsPerFeatureConfig[i, ], message(DB, " ", FeatureType, " ", nbinsUpstream, " ", nbinsDownstream, " ", nbinsBody))
@@ -114,7 +107,7 @@ for (i in 1:nrow(CvgsPerFeatureConfig)) {
 ###########################################################################
 ## Scale profiles to unit SD and zero mean.
 CvgsABreadCmate5EndExtFullListAvgZscore <- lapply(CvgsABreadCmate5EndExtFullList[["Avg"]], scale)
-outDir <- "Report/release/ProfileAnalysis/zscoreHeatmap"
+outDir <- "Report/ProfileAnalysis/zscoreHeatmap"
 dir.create(outDir, FALSE, TRUE)
 
 range(CvgsABreadCmate5EndExtFullListAvgZscore[[14]], na.rm = TRUE)
@@ -174,7 +167,7 @@ for (i in 1:nrow(CvgsPerFeatureConfig)) {
 ## Coverage profiles per sample
 ###########################################################################
 SampleInfoFull$TrtGroup <- factor(SampleInfoFull$TrtGroup, levels = trtGroups)
-outDir <- "Report/release/ProfileAnalysis/Curve"
+outDir <- "Report/ProfileAnalysis/Curve"
 dir.create(outDir, FALSE, TRUE)
 for (i in 1:nrow(CvgsPerFeatureConfig)) {
     message(i)
@@ -220,9 +213,9 @@ for (i in 1:nrow(CvgsPerFeatureConfig)) {
 ###########################################################################
 ## Coverage curves and matrix
 ###########################################################################
-inDirbase <- "Report/release/Profiles"
-outDir <- "Report/release/ProfileAnalysis/ProfileAndMatrix"
-FeatureIDsMainNoMY <- readRDS("Data/release/GenomicFeatures/FeatureIDsMainNoMY.RDS")
+inDirbase <- "Report/Profiles"
+outDir <- "Report/ProfileAnalysis/ProfileAndMatrix"
+FeatureIDsMainNoMY <- readRDS("Data/GenomicFeatures/FeatureIDsMainNoMY.RDS")
 dir.create(outDir, FALSE, TRUE)
 for (i in 1:nrow(CvgsPerFeatureConfig)) {
     config <- CvgsPerFeatureConfig[i, ]
@@ -302,7 +295,7 @@ sampleID_virtmax_K562Positive <- "K562PositiveAll"
 sampleID_virtmax_K562NegCtrl <- "K562NegCtrlAll"
 sampleID_virtmax_K562MungBean <- "K562MungBeanPositiveMerged"
 M <- scale(CvgsABreadCmate5EndExtFullList$Avg[[1]])
-pdf("Report/release/ProfileAnalysis/zscoreCurve/CvgsABreadCmate5EndExtFiltered_K562_Positive-NegCtrl-MungBean.pdf", width = 3, height = 6, useDingbats = FALSE)
+pdf("Report/ProfileAnalysis/zscoreCurve/CvgsABreadCmate5EndExtFiltered_K562_Positive-NegCtrl-MungBean.pdf", width = 3, height = 6, useDingbats = FALSE)
 par(mfcol = c(3, 1), mar = c(2, 2, 1, 1))
 matplot(x = 1:500, y = M[, sampleIDs_K562Positive], lty = 1, lwd = 0.1, col = "black", axes = FALSE, type = "l", ylim = c(-3, 3), main = "Positive")
 lines(M[, sampleID_virtmax_K562Positive], lty = 1, lwd = 1, col = "black")

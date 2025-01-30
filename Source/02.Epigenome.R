@@ -8,7 +8,7 @@
 ## License, v. 2.0. If a copy of the MPL was not distributed with this
 ## file, You can obtain one at http://mozilla.org/MPL/2.0/.
 ###########################################################################
-source("Source/release/functions.R")
+source("Source/functions.R")
 ###########################################################################
 ## To load various epigenetic tracks from UCSC, ENCODE, etc. databases
 ## Input: bigWig; bed (broad vs. narrow peak); 
@@ -48,14 +48,14 @@ K562ATACSignals <- sapply(K562ATACSampleIDs, function(sampleID) {
     message(sampleID) 
     Genome$standardizeSeqInfo(rtracklayer::import(sprintf("Data/GSE65360/analyzed/bowtie2X2k/%s/filtered.bigWig", sampleID)), seqInfo = Genome$MainSeqInfo$human, prune = TRUE, seqLevels = Genome$MainSeqLevels$human)
 }, simplify = FALSE)
-saveRDS(K562ATACSampleMeta, file = "Data/release/Epigenome/K562ATACSampleMeta.RDS")
-saveRDS(K562ATACSampleIDs, file = "Data/release/Epigenome/K562ATACSampleIDs.RDS")
-saveRDS(K562ATACNarrowPeaks, file = "Data/release/Epigenome/K562ATACNarrowPeaks.RDS")
-dir.create("Report/release/Epigenome/K562ATACNarrowPeaks", FALSE, TRUE)
-rtracklayer::export(K564ATACNarrowPeaks$K562UntreatedAll, con = "Report/release/Epigenome/K562ATACNarrowPeaks/K562UntreatedAll.bed.gz")
-dir.create("Data/release/Epigenome", FALSE, TRUE)
-saveRDS(K562ATACBroadPeaks, file = "Data/release/Epigenome/K562ATACBroadPeaks.RDS")
-saveRDS(K562ATACSignals, file = "Data/release/Epigenome/K562ATACSignals.RDS")
+saveRDS(K562ATACSampleMeta, file = "Data/Epigenome/K562ATACSampleMeta.RDS")
+saveRDS(K562ATACSampleIDs, file = "Data/Epigenome/K562ATACSampleIDs.RDS")
+saveRDS(K562ATACNarrowPeaks, file = "Data/Epigenome/K562ATACNarrowPeaks.RDS")
+dir.create("Report/Epigenome/K562ATACNarrowPeaks", FALSE, TRUE)
+rtracklayer::export(K564ATACNarrowPeaks$K562UntreatedAll, con = "Report/Epigenome/K562ATACNarrowPeaks/K562UntreatedAll.bed.gz")
+dir.create("Data/Epigenome", FALSE, TRUE)
+saveRDS(K562ATACBroadPeaks, file = "Data/Epigenome/K562ATACBroadPeaks.RDS")
+saveRDS(K562ATACSignals, file = "Data/Epigenome/K562ATACSignals.RDS")
 
 ## 1.2 DNase-seq from ENCODE
 K562DNaseFiles <- list(
@@ -73,22 +73,22 @@ K562DNaseBroadPeaks <- sapply(c("Rep1", "Rep2"), function(ID) {
 K562DNaseSignals <- sapply(c("Rep1", "Rep2"), function(ID) { 
     Genome$standardizeSeqInfo(rtracklayer::import(sprintf("Data/Database/ENCODE/DNase-seq/hg38/K562/%s", K562DNaseFiles[[ID]]["Signal"])), seqInfo = Genome$MainSeqInfo$human, prune = TRUE, seqLevels = Genome$MainSeqLevels$human)
 }, simplify = FALSE)
-saveRDS(K562DNaseNarrowPeaks, file = "Data/release/Epigenome/K562DNaseNarrowPeaks.RDS")
-dir.create("Report/release/Epigenome/K562DNaseNarrowPeaks", FALSE, TRUE)
-rtracklayer::export(K562DNaseNarrowPeaks$Rep1, con = "Report/release/Epigenome/K562DNaseNarrowPeaks/ENCFF941GAQ.bed.gz")
-rtracklayer::export(K562DNaseNarrowPeaks$Rep2, con = "Report/release/Epigenome/K562DNaseNarrowPeaks/ENCFF196JWI.bed.gz")
-saveRDS(K562DNaseBroadPeaks, file = "Data/release/Epigenome/K562DNaseBroadPeaks.RDS")
-saveRDS(K562DNaseSignals, file = "Data/release/Epigenome/K562DNaseSignals.RDS")
+saveRDS(K562DNaseNarrowPeaks, file = "Data/Epigenome/K562DNaseNarrowPeaks.RDS")
+dir.create("Report/Epigenome/K562DNaseNarrowPeaks", FALSE, TRUE)
+rtracklayer::export(K562DNaseNarrowPeaks$Rep1, con = "Report/Epigenome/K562DNaseNarrowPeaks/ENCFF941GAQ.bed.gz")
+rtracklayer::export(K562DNaseNarrowPeaks$Rep2, con = "Report/Epigenome/K562DNaseNarrowPeaks/ENCFF196JWI.bed.gz")
+saveRDS(K562DNaseBroadPeaks, file = "Data/Epigenome/K562DNaseBroadPeaks.RDS")
+saveRDS(K562DNaseSignals, file = "Data/Epigenome/K562DNaseSignals.RDS")
 
 ## 1.3 FAIRE-seq
 ## Note, we don't have broadPeaks for FAIRE-seq
 K562FAIRENarrowPeaks <- list(standardizeSeqInfo(Genome$import.narrowPeak("Data/Database/ENCODE/FAIRE-seq/hg38/K562/ENCFF000TLT.bed"), seqInfo = Genome$MainSeqInfo$human, prune = TRUE, seqLevels = Genome$MainSeqLevels$human))
 ## Note, narrowPeaks have -1 as pValue.
 K562FAIRESignals <- list(standardizeSeqInfo(rtracklayer::import(sprintf("Data/Database/ENCODE/FAIRE-seq/hg38/K562/%s", "ENCFF000TLE.bigWig")), seqInfo = Genome$MainSeqInfo$human, prune = TRUE, seqLevels = Genome$MainSeqLevels$human))
-saveRDS(K562FAIRENarrowPeaks, file = "Data/release/Epigenome/K562FAIRENarrowPeaks.RDS")
-dir.create("Report/release/Epigenome/K562FAIRENarrowPeaks", FALSE, TRUE)
-rtracklayer::export(K562FAIRENarrowPeaks[[1]], con = "Report/release/Epigenome/K562FAIRENarrowPeaks/ENCFF000TLT.bed.gz")
-saveRDS(K562FAIRESignals, file = "Data/release/Epigenome/K562FAIRESignals.RDS")
+saveRDS(K562FAIRENarrowPeaks, file = "Data/Epigenome/K562FAIRENarrowPeaks.RDS")
+dir.create("Report/Epigenome/K562FAIRENarrowPeaks", FALSE, TRUE)
+rtracklayer::export(K562FAIRENarrowPeaks[[1]], con = "Report/Epigenome/K562FAIRENarrowPeaks/ENCFF000TLT.bed.gz")
+saveRDS(K562FAIRESignals, file = "Data/Epigenome/K562FAIRESignals.RDS")
 
 ## 1.4 RRBS CpG methylation
 ## As of rtrackyaler v1.42.2 we don't need import.bedMethyl any more.
@@ -97,7 +97,7 @@ K562RRBSMethy <- list(
     Rep2 = rtracklayer::import("Data/Database/wgEncode/MethylRRBS/hg38/wgEncodeHaibMethylRrbsK562HaibSitesRep2.bed")
 )
 K562RRBSMethy <- lapply(K562RRBSMethy, Genome$standardizeSeqInfo, seqInfo = Genome$MainSeqInfo$human, prune = TRUE, seqLevels = Genome$MainSeqLevels$human)
-saveRDS(K562RRBSMethy, file = "Data/release/Epigenome/K562RRBSMethy.RDS")
+saveRDS(K562RRBSMethy, file = "Data/Epigenome/K562RRBSMethy.RDS")
 
 ## Stratify RRBS methylation data into four categories: low, mid-low, mid-high, high
 ## 1. merge Rep1 and Rep2 first
@@ -116,17 +116,17 @@ K562RRBSMethyLevels <- K562RRBSMethyLevels[c("Low", "MidLow", "MidHigh", "High")
 lengths(K562RRBSMethyLevels)
 ##     Low  MidLow MidHigh    High
 ## 1036075  114318  106518  315017
-saveRDS(K562RRBSMethyLevels, file = "Data/release/Epigenome/K562RRBSMethyLevels.RDS")
-dir.create("Report/release/Epigenome/K562RRBSMethyLevels", FALSE, TRUE)
+saveRDS(K562RRBSMethyLevels, file = "Data/Epigenome/K562RRBSMethyLevels.RDS")
+dir.create("Report/Epigenome/K562RRBSMethyLevels", FALSE, TRUE)
 for (q in c("Low", "MidLow", "MidHigh", "High")) {
-    rtracklayer::export(K562RRBSMethyLevels[[q]], con = sprintf("Report/release/Epigenome/K562RRBSMethyLevels/%s.bed.gz", q))
+    rtracklayer::export(K562RRBSMethyLevels[[q]], con = sprintf("Report/Epigenome/K562RRBSMethyLevels/%s.bed.gz", q))
 }
 
 ## 1.5 Replication origin from GSE46189
 K562RepOrigPeaks <- list(Genome$standardizeSeqInfo(rtracklayer::import("Data/GSE46189/GEO/hg38/GSE46189_Ori-Peak.bed"), seqInfo = Genome$MainSeqInfo$human, prune = TRUE, seqLevels = Genome$MainSeqLevels$human))
-saveRDS(K562RepOrigPeaks, file = "Data/release/Epigenome/K562RepOrigPeaks.RDS")
-dir.create("Report/release/Epigenome/K562RepOrigPeaks", FALSE, TRUE)
-rtracklayer::export(K562RepOrigPeaks[[1]], con = "Report/release/Epigenome/K562RepOrigPeaks/GSE46189.bed.gz")
+saveRDS(K562RepOrigPeaks, file = "Data/Epigenome/K562RepOrigPeaks.RDS")
+dir.create("Report/Epigenome/K562RepOrigPeaks", FALSE, TRUE)
+rtracklayer::export(K562RepOrigPeaks[[1]], con = "Report/Epigenome/K562RepOrigPeaks/GSE46189.bed.gz")
 
 ## 1.6 ChIP-seq
 ## 1.6.1 TFBS 
@@ -150,12 +150,12 @@ K562ChIPTFs <- with(K562ChIPMetadataTF, sapply(SampleID, function(sampleID) {
     Genome$standardizeSeqInfo(GRs, seqInfo = Genome$MainSeqInfo$human, prune = TRUE, seqLevels = Genome$MainSeqLevels$human)
 }, simplify = FALSE))
 names(K562ChIPTFs) <- K562ChIPMetadataTF[, "Target"]
-write.csv(K562ChIPMetadataTF, file = "Report/release/Epigenome/K562ChIPMetadataTF.csv")
-saveRDS(K562ChIPTFs, file = "Data/release/Epigenome/K562ChIPTFs.RDS")
-dir.create("Report/release/Epigenome/K562ChIPTFs", FALSE, TRUE)
+write.csv(K562ChIPMetadataTF, file = "Report/Epigenome/K562ChIPMetadataTF.csv")
+saveRDS(K562ChIPTFs, file = "Data/Epigenome/K562ChIPTFs.RDS")
+dir.create("Report/Epigenome/K562ChIPTFs", FALSE, TRUE)
 for (x in names(K562ChIPTFs)) {
     message(x)
-    rtracklayer::export(K562ChIPTFs[[x]], con = sprintf("Report/release/Epigenome/K562ChIPTFs/%s.bed.gz", x))
+    rtracklayer::export(K562ChIPTFs[[x]], con = sprintf("Report/Epigenome/K562ChIPTFs/%s.bed.gz", x))
 }
 
 ## 1.6.2 Broad histone marks
@@ -175,12 +175,12 @@ K562ChIPBHMs <- with(K562ChIPMetadataBHM, sapply(SampleID, function(sampleID) {
     Genome$standardizeSeqInfo(GRs, seqInfo = Genome$MainSeqInfo$human, prune = TRUE, seqLevels = Genome$MainSeqLevels$human)
 }, simplify = FALSE))
 names(K562ChIPBHMs) <- K562ChIPMetadataBHM[, "Target"]
-write.csv(K562ChIPMetadataBHM, file = "Report/release/Epigenome/K562ChIPMetadataBHM.csv")
-saveRDS(K562ChIPBHMs, file = "Data/release/Epigenome/K562ChIPBHMs.RDS")
-dir.create("Report/release/Epigenome/K562ChIPBHMs", FALSE, TRUE)
+write.csv(K562ChIPMetadataBHM, file = "Report/Epigenome/K562ChIPMetadataBHM.csv")
+saveRDS(K562ChIPBHMs, file = "Data/Epigenome/K562ChIPBHMs.RDS")
+dir.create("Report/Epigenome/K562ChIPBHMs", FALSE, TRUE)
 for (x in names(K562ChIPBHMs)) {
     message(x)
-    rtracklayer::export(K562ChIPBHMs[[x]], con = sprintf("Report/release/Epigenome/K562ChIPBHMs/%s.bed.gz", x))
+    rtracklayer::export(K562ChIPBHMs[[x]], con = sprintf("Report/Epigenome/K562ChIPBHMs/%s.bed.gz", x))
 }
 
 ## 1.6.3 Narrow histone marks
@@ -203,12 +203,12 @@ names(K562ChIPNHMs) <- K562ChIPMetadataNHM[, "Target"]
 
 K562ChIPNHMsH3K27ac <- Genome$standardizeSeqInfo(Genome$import.narrowPeak("Data/Database/ENCODE/ChIP-seq/hg38/K562/NarrowHistoneMark/ENCFF045OHM.bed"), seqInfo = Genome$MainSeqInfo$human, prune = TRUE, seqLevels = Genome$MainSeqLevels$human)
 K562ChIPNHMs <- c(K562ChIPNHMs, list(H3K27ac = K562ChIPNHMsH3K27ac))
-write.csv(K562ChIPMetadataNHM, file = "Report/release/Epigenome/K562ChIPMetadataNHM.csv")
-saveRDS(K562ChIPNHMs, file = "Data/release/Epigenome/K562ChIPNHMs.RDS")
-dir.create("Report/release/Epigenome/K562ChIPNHMs", FALSE, TRUE)
+write.csv(K562ChIPMetadataNHM, file = "Report/Epigenome/K562ChIPMetadataNHM.csv")
+saveRDS(K562ChIPNHMs, file = "Data/Epigenome/K562ChIPNHMs.RDS")
+dir.create("Report/Epigenome/K562ChIPNHMs", FALSE, TRUE)
 for (x in names(K562ChIPNHMs)) {
     message(x)
-    rtracklayer::export(K562ChIPNHMs[[x]], con = sprintf("Report/release/Epigenome/K562ChIPNHMs/%s.bed.gz", x))
+    rtracklayer::export(K562ChIPNHMs[[x]], con = sprintf("Report/Epigenome/K562ChIPNHMs/%s.bed.gz", x))
 }
 
 ## 1.7 GRO-seq nascent RNA run-on sequencing data
@@ -216,25 +216,25 @@ K562GROFiles <- list(Plus = "Data/GSE60454/GEO/hg38/GSM1480325_K562_GROseq_plus.
 K562GROSignals <- lapply(K562GROFiles, function(filename) Genome$standardizeSeqInfo(rtracklayer::import(filename), seqInfo = Genome$MainSeqInfo$human, prune = TRUE, seqLevels = Genome$MainSeqLevels$human))
 K562GROPeaks <- list(Homer = rtracklayer::import("Data/GSE60454/analyzed/Sample_GSM1480325/HOMERnoSplice/TagDir/transcripts.gtf"))
 K562GROPeaks <- lapply(K562GROPeaks, Genome$standardizeSeqInfo, seqInfo = Genome$MainSeqInfo$human, seqLevels = Genome$MainSeqLevels$human, prune = TRUE)
-saveRDS(K562GROPeaks, file = "Data/release/Epigenome/K562GROPeaks.RDS")
-saveRDS(K562GROSignals, file = "Data/release/Epigenome/K562GROSignals.RDS")
-dir.create("Report/release/Epigenome/K562GROPeaks", FALSE, TRUE)
-rtracklayer::export(K562GROPeaks[[1]], con = sprintf("Report/release/Epigenome/K562GROPeaks/%s.bed.gz", "GSM1480325"))
+saveRDS(K562GROPeaks, file = "Data/Epigenome/K562GROPeaks.RDS")
+saveRDS(K562GROSignals, file = "Data/Epigenome/K562GROSignals.RDS")
+dir.create("Report/Epigenome/K562GROPeaks", FALSE, TRUE)
+rtracklayer::export(K562GROPeaks[[1]], con = sprintf("Report/Epigenome/K562GROPeaks/%s.bed.gz", "GSM1480325"))
 
 ## 1.8 super-enhancer
 K562SEPeaks <- sort(Genome$standardizeSeqInfo(import("Data/Database/dbSUPER/hg38/K562.bed"), seqInfo = Genome$MainSeqInfo$human, seqLevels = Genome$MainSeqLevels$human, prune = TRUE))
 score(K562SEPeaks) <- 1 ## Original score is peak number index, we need to replace this misleading information.
-saveRDS(K562SEPeaks, file = "Data/release/Epigenome/K562SEPeaks.RDS")
-dir.create("Report/release/Epigenome/K562SEPeaks", FALSE, TRUE)
-rtracklayer::export(K562SEPeaks, con = sprintf("Report/release/Epigenome/K562SEPeaks/%s.bed.gz", "dbSUPER"))
+saveRDS(K562SEPeaks, file = "Data/Epigenome/K562SEPeaks.RDS")
+dir.create("Report/Epigenome/K562SEPeaks", FALSE, TRUE)
+rtracklayer::export(K562SEPeaks, con = sprintf("Report/Epigenome/K562SEPeaks/%s.bed.gz", "dbSUPER"))
 
 ## 1.9 DRIP-seq R-loop DNA
 K562RloopPeaks <- list(GSM1720619 = sort(Genome$standardizeSeqInfo(rtracklayer::import("Data/GSE70189/GEO/hg38/GSM1720619_K562_DRIP_peaks.bed"), seqInfo = Genome$MainSeqInfo$human, seqLevels = Genome$MainSeqLevels$human, prune = TRUE)))
-saveRDS(K562RloopPeaks, file = "Data/release/Epigenome/K562RloopPeaks.RDS")
+saveRDS(K562RloopPeaks, file = "Data/Epigenome/K562RloopPeaks.RDS")
 K562RloopSignals <- list(GSM1720619 = sort(Genome$standardizeSeqInfo(rtracklayer::import("Data/Datasets/GSE70189/GEO/hg38/GSM1720619_K562_DRIP.bigWig"), seqInfo = Genome$MainSeqInfo$human, seqLevels = Genome$MainSeqLevels$human, prune = TRUE)))
-saveRDS(K562RloopSignals, file = "Data/release/Epigenome/K562RloopSignals.RDS")
-dir.create("Report/release/Epigenome/K562RloopPeaks", FALSE, TRUE)
-rtracklayer::export(K562RloopPeaks[["GSM1720619"]], con = "Report/release/Epigenome/K562RloopPeaks/GSM1720619.bed.gz")
+saveRDS(K562RloopSignals, file = "Data/Epigenome/K562RloopSignals.RDS")
+dir.create("Report/Epigenome/K562RloopPeaks", FALSE, TRUE)
+rtracklayer::export(K562RloopPeaks[["GSM1720619"]], con = "Report/Epigenome/K562RloopPeaks/GSM1720619.bed.gz")
 
 ###########################################################################
 ## 2. Brain cells
@@ -248,11 +248,11 @@ HumanBrainATACNarrowPeaks <- lapply(HumanBrainATACNarrowPeaks, Genome$removeDupP
 HumanBrainATACBroadPeaks <- list(CerebellumMaleAdult20years = Genome$import.broadPeak("Data/Database/ENCODE/ATAC-seq/hg38/Brain/CerebellumMaleAdult20years/MACS2/ENCFF114WRE_peaks.broadPeak"))
 HumanBrainATACBroadPeaks <- lapply(HumanBrainATACBroadPeaks,  Genome$standardizeSeqInfo, seqInfo = Genome$MainSeqInfo$human, seqLevels = Genome$MainSeqLevels$human, prune = TRUE)
 HumanBrainATACBroadPeaks <- lapply(HumanBrainATACBroadPeaks, Genome$removeDupPeaks)
-saveRDS(HumanBrainATACNarrowPeaks, file = "Data/release/Epigenome/HumanBrainATACNarrowPeaks.RDS")
-saveRDS(HumanBrainATACBroadPeaks, file = "Data/release/Epigenome/HumanBrainATACBroadPeaks.RDS")
-HumanBrainATACNarrowPeaks <- readRDS("Data/release/Epigenome/HumanBrainATACNarrowPeaks.RDS")
-dir.create("Report/release/Epigenome/HumanBrainATACNarrowPeaks", FALSE, TRUE)
-rtracklayer::export(HumanBrainATACNarrowPeaks$CerebellumMaleAdult20years, con = "Report/release/Epigenome/HumanBrainATACNarrowPeaks/CerebellumMaleAdult20years.bed.gz")
+saveRDS(HumanBrainATACNarrowPeaks, file = "Data/Epigenome/HumanBrainATACNarrowPeaks.RDS")
+saveRDS(HumanBrainATACBroadPeaks, file = "Data/Epigenome/HumanBrainATACBroadPeaks.RDS")
+HumanBrainATACNarrowPeaks <- readRDS("Data/Epigenome/HumanBrainATACNarrowPeaks.RDS")
+dir.create("Report/Epigenome/HumanBrainATACNarrowPeaks", FALSE, TRUE)
+rtracklayer::export(HumanBrainATACNarrowPeaks$CerebellumMaleAdult20years, con = "Report/Epigenome/HumanBrainATACNarrowPeaks/CerebellumMaleAdult20years.bed.gz")
 
 ## 2.1.2 human brain DNase-seq
 HumanBrainDNaseMetadata <- read.csv("Data/Database/ENCODE/DNase-seq/hg38/Brain/metadata.tsv", sep = "\t", as.is = TRUE, check.names = FALSE)
@@ -276,22 +276,22 @@ HumanBrainDNaseBroadPeaks <- list(
 )
 HumanBrainDNaseBroadPeaks <- lapply(HumanBrainDNaseBroadPeaks, function(X) "names<-"(X, paste0("Rep", names(X))))
 HumanBrainDNaseBroadPeaks <- rapply(HumanBrainDNaseBroadPeaks, Genome$standardizeSeqInfo, seqInfo = Genome$MainSeqInfo$human, seqLevels = Genome$MainSeqLevels$human, prune = TRUE, how = "replace")
-write.csv(HumanBrainDNaseMetadata, file = "Report/release/Epigenome/HumanBrainDNaseMetadata.csv")
-saveRDS(HumanBrainDNaseNarrowPeaks, file = "Data/release/Epigenome/HumanBrainDNaseNarrowPeaks.RDS")
-saveRDS(HumanBrainDNaseBroadPeaks, file = "Data/release/Epigenome/HumanBrainDNaseBroadPeaks.RDS")
-HumanBrainDNaseNarrowPeaks <- readRDS(file = "Data/release/Epigenome/HumanBrainDNaseNarrowPeaks.RDS")
-dir.create("Report/release/Epigenome/HumanBrainDNaseNarrowPeaks", FALSE, TRUE)
+write.csv(HumanBrainDNaseMetadata, file = "Report/Epigenome/HumanBrainDNaseMetadata.csv")
+saveRDS(HumanBrainDNaseNarrowPeaks, file = "Data/Epigenome/HumanBrainDNaseNarrowPeaks.RDS")
+saveRDS(HumanBrainDNaseBroadPeaks, file = "Data/Epigenome/HumanBrainDNaseBroadPeaks.RDS")
+HumanBrainDNaseNarrowPeaks <- readRDS(file = "Data/Epigenome/HumanBrainDNaseNarrowPeaks.RDS")
+dir.create("Report/Epigenome/HumanBrainDNaseNarrowPeaks", FALSE, TRUE)
 for (x in names(HumanBrainDNaseNarrowPeaks)) { 
-    rtracklayer::export(Reduce(union, HumanBrainDNaseNarrowPeaks[[x]]), con = sprintf("Report/release/Epigenome/HumanBrainDNaseNarrowPeaks/%s.bed.gz", x)) 
+    rtracklayer::export(Reduce(union, HumanBrainDNaseNarrowPeaks[[x]]), con = sprintf("Report/Epigenome/HumanBrainDNaseNarrowPeaks/%s.bed.gz", x)) 
 }
 
 ## 2.1.3 human brain FAIRE-seq
 HumanBrainFAIRENarrowPeaks <- list(Astrocyte = Genome$import.narrowPeak("Data/Database/ENCODE/FAIRE-seq/hg38/Brain/Astrocycyte/ENCFF000TOD.narrowPeak"))
 HumanBrainFAIRENarrowPeaks <- lapply(HumanBrainFAIRENarrowPeaks, Genome$standardizeSeqInfo, seqInfo = Genome$MainSeqInfo$human, seqLevels = Genome$MainSeqLevels$human, prune = TRUE)
-saveRDS(HumanBrainFAIRENarrowPeaks, file = "Data/release/Epigenome/HumanBrainFAIRENarrowPeaks.RDS")
-HumanBrainFAIRENarrowPeaks <- readRDS(file = "Data/release/Epigenome/HumanBrainFAIRENarrowPeaks.RDS")
-dir.create("Report/release/Epigenome/HumanBrainFAIRENarrowPeaks", FALSE, TRUE)
-rtracklayer::export(HumanBrainFAIRENarrowPeaks$Astrocyte, con = "Report/release/Epigenome/HumanBrainFAIRENarrowPeaks/Astrocyte.bed.gz")
+saveRDS(HumanBrainFAIRENarrowPeaks, file = "Data/Epigenome/HumanBrainFAIRENarrowPeaks.RDS")
+HumanBrainFAIRENarrowPeaks <- readRDS(file = "Data/Epigenome/HumanBrainFAIRENarrowPeaks.RDS")
+dir.create("Report/Epigenome/HumanBrainFAIRENarrowPeaks", FALSE, TRUE)
+rtracklayer::export(HumanBrainFAIRENarrowPeaks$Astrocyte, con = "Report/Epigenome/HumanBrainFAIRENarrowPeaks/Astrocyte.bed.gz")
 
 ## 2.1.4 human brain WGBS
 ## Only SK-N-SH available, this is neuronblastoma cell line, since cancer cell line has distinct methylome than normal cells, we don't include the data here.
@@ -325,14 +325,14 @@ MouseBrainATACBroadPeaks <- sapply(MouseBrainATACTissueTypes, function(tissue) {
 }, simplify = FALSE)
 MouseBrainATACBroadPeaks <- rapply(MouseBrainATACBroadPeaks, Genome$standardizeSeqInfo, seqInfo = Genome$MainSeqInfo$mouse, seqLevels = Genome$MainSeqLevels$mouse, prune = TRUE, how = "replace") 
 MouseBrainATACBroadPeaks <- sapply(MouseBrainATACTissueTypes, function(tissue) MouseBrainATACBroadPeaks[[tissue]]$merged, simplify = FALSE)
-write.csv(MouseBrainATACMetadata, file = "Report/release/Epigenome/MouseBrainATACMetadata.csv")
-saveRDS(MouseBrainATACNarrowPeaks, file = "Data/release/Epigenome/MouseBrainATACNarrowPeaks.RDS")
-saveRDS(MouseBrainATACBroadPeaks, file = "Data/release/Epigenome/MouseBrainATACBroadPeaks.RDS")
+write.csv(MouseBrainATACMetadata, file = "Report/Epigenome/MouseBrainATACMetadata.csv")
+saveRDS(MouseBrainATACNarrowPeaks, file = "Data/Epigenome/MouseBrainATACNarrowPeaks.RDS")
+saveRDS(MouseBrainATACBroadPeaks, file = "Data/Epigenome/MouseBrainATACBroadPeaks.RDS")
 
-MouseBrainATACNarrowPeaks <- readRDS(file = "Data/release/Epigenome/MouseBrainATACNarrowPeaks.RDS")
-dir.create("Report/release/Epigenome/MouseBrainATACNarrowPeaks", FALSE, TRUE)
+MouseBrainATACNarrowPeaks <- readRDS(file = "Data/Epigenome/MouseBrainATACNarrowPeaks.RDS")
+dir.create("Report/Epigenome/MouseBrainATACNarrowPeaks", FALSE, TRUE)
 for (x in grep("Adult", names(MouseBrainATACNarrowPeaks), value = TRUE)) {
-    rtracklayer::export(MouseBrainATACNarrowPeaks[[x]], con = sprintf("Report/release/Epigenome/MouseBrainATACNarrowPeaks/%s.bed.gz", x))
+    rtracklayer::export(MouseBrainATACNarrowPeaks[[x]], con = sprintf("Report/Epigenome/MouseBrainATACNarrowPeaks/%s.bed.gz", x))
 }
 
 ## 2.2.2 Mouse Brain DNase-seq
@@ -388,14 +388,14 @@ MouseBrainDNaseBroadPeaks <- lapply(MouseBrainDNaseBroadPeaks, function(X) {
     X <- as(object = X, Class = "GRangesList") 
     reduce(Reduce(union, X), ignore.strand = TRUE) 
 })
-write.csv(MouseBrainDNaseMetadata, file = "Report/release/Epigenome/MouseBrainDNaseMetadata.csv")
-saveRDS(MouseBrainDNaseNarrowPeaks, file = "Data/release/Epigenome/MouseBrainDNaseNarrowPeaks.RDS")
-saveRDS(MouseBrainDNaseBroadPeaks, file = "Data/release/Epigenome/MouseBrainDNaseBroadPeaks.RDS")
+write.csv(MouseBrainDNaseMetadata, file = "Report/Epigenome/MouseBrainDNaseMetadata.csv")
+saveRDS(MouseBrainDNaseNarrowPeaks, file = "Data/Epigenome/MouseBrainDNaseNarrowPeaks.RDS")
+saveRDS(MouseBrainDNaseBroadPeaks, file = "Data/Epigenome/MouseBrainDNaseBroadPeaks.RDS")
 
-MouseBrainDNaseNarrowPeaks <- readRDS(file = "Data/release/Epigenome/MouseBrainDNaseNarrowPeaks.RDS")
-dir.create("Report/release/Epigenome/MouseBrainDNaseNarrowPeaks", FALSE, TRUE)
+MouseBrainDNaseNarrowPeaks <- readRDS(file = "Data/Epigenome/MouseBrainDNaseNarrowPeaks.RDS")
+dir.create("Report/Epigenome/MouseBrainDNaseNarrowPeaks", FALSE, TRUE)
 for (x in grep("Adult", names(MouseBrainDNaseNarrowPeaks), value = TRUE)) {
-    rtracklayer::export(MouseBrainDNaseNarrowPeaks[[x]], con = sprintf("Report/release/Epigenome/MouseBrainDNaseNarrowPeaks/%s.bed.gz", x))
+    rtracklayer::export(MouseBrainDNaseNarrowPeaks[[x]], con = sprintf("Report/Epigenome/MouseBrainDNaseNarrowPeaks/%s.bed.gz", x))
 }
 
 ## 2.2.3 Mouse Brain FAIRE-seq
@@ -438,8 +438,8 @@ names(MouseBrainChIPTFs)
 ## [5] "midbrain"       "olfactory bulb"
 MouseBrainChIPTFs <- as(MouseBrainChIPTFs, "list")
 names(MouseBrainChIPTFs) <- c("Cerebellum", "CorticalPlate", "ForeBrain", "HindBrain", "MidBrain", "OlfactoryBulb")
-write.csv(MouseBrainChIPMetadataTF, file = "Report/release/Epigenome/MouseBrainChIPMetadataTF.csv")
-saveRDS(MouseBrainChIPTFs, file = "Data/release/Epigenome/MouseBrainChIPTFs.RDS")
+write.csv(MouseBrainChIPMetadataTF, file = "Report/Epigenome/MouseBrainChIPMetadataTF.csv")
+saveRDS(MouseBrainChIPTFs, file = "Data/Epigenome/MouseBrainChIPTFs.RDS")
 ## We finally decided not to include TFs because of the lack of age information from the metadata sheet. 
 
 MouseBrainChIPExptMetaBHM <- read.csv("Data/Database/ENCODE/ChIP-seq/mm10/Brain/BroadHistoneMark/Experiment Report 2019_1_21.tsv", sep = "\t", as.is = TRUE, check.names = FALSE, skip = 1)
@@ -548,14 +548,14 @@ MouseBrainChIPBiosampleLabsBHM
 MouseBrainChIPBHMs <- as(MouseBrainChIPBHMs, "list")
 names(MouseBrainChIPBHMs) <- MouseBrainChIPBiosampleLabsBHM
 MouseBrainChIPBHMs <- rapply(MouseBrainChIPBHMs, Genome$standardizeSeqInfo, seqInfo = Genome$MainSeqInfo$mouse, seqLevels = Genome$MainSeqLevels$mouse, prune = TRUE, how = "replace")
-write.csv(MouseBrainChIPMetadataBHM, file = "Report/release/Epigenome/MouseBrainChIPMetadataBHM.csv")
-saveRDS(MouseBrainChIPBHMs, file = "Data/release/Epigenome/MouseBrainChIPBHMs.RDS")
+write.csv(MouseBrainChIPMetadataBHM, file = "Report/Epigenome/MouseBrainChIPMetadataBHM.csv")
+saveRDS(MouseBrainChIPBHMs, file = "Data/Epigenome/MouseBrainChIPBHMs.RDS")
 
-MouseBrainChIPBHMs <- readRDS(file = "Data/release/Epigenome/MouseBrainChIPBHMs.RDS")
-dir.create("Report/release/Epigenome/MouseBrainChIPBHMs", FALSE, TRUE)
+MouseBrainChIPBHMs <- readRDS(file = "Data/Epigenome/MouseBrainChIPBHMs.RDS")
+dir.create("Report/Epigenome/MouseBrainChIPBHMs", FALSE, TRUE)
 for (x in grep("Adult", names(MouseBrainChIPBHMs), value = TRUE)) {
     for (y in names(MouseBrainChIPBHMs[[x]])) {
-        rtracklayer::export(MouseBrainChIPBHMs[[x]][[y]], con = sprintf("Report/release/Epigenome/MouseBrainChIPBHMs/%s_%s.bed.gz", x, y))
+        rtracklayer::export(MouseBrainChIPBHMs[[x]][[y]], con = sprintf("Report/Epigenome/MouseBrainChIPBHMs/%s_%s.bed.gz", x, y))
     }
 }
 
@@ -662,14 +662,14 @@ MouseBrainChIPBiosampleLabsNHM
 MouseBrainChIPNHMs <- as(MouseBrainChIPNHMs, "list")
 names(MouseBrainChIPNHMs) <- MouseBrainChIPBiosampleLabsNHM
 MouseBrainChIPNHMs <- rapply(MouseBrainChIPNHMs, Genome$standardizeSeqInfo, seqInfo = Genome$MainSeqInfo$mouse, seqLevels = Genome$MainSeqLevels$mouse, prune = TRUE, how = "replace")
-write.csv(MouseBrainChIPMetadataNHM, file = "Report/release/Epigenome/MouseBrainChIPMetadataNHM.csv")
-saveRDS(MouseBrainChIPNHMs, file = "Data/release/Epigenome/MouseBrainChIPNHMs.RDS")
+write.csv(MouseBrainChIPMetadataNHM, file = "Report/Epigenome/MouseBrainChIPMetadataNHM.csv")
+saveRDS(MouseBrainChIPNHMs, file = "Data/Epigenome/MouseBrainChIPNHMs.RDS")
 
-MouseBrainChIPNHMs <- readRDS(file = "Data/release/Epigenome/MouseBrainChIPNHMs.RDS")
-dir.create("Report/release/Epigenome/MouseBrainChIPNHMs", FALSE, TRUE)
+MouseBrainChIPNHMs <- readRDS(file = "Data/Epigenome/MouseBrainChIPNHMs.RDS")
+dir.create("Report/Epigenome/MouseBrainChIPNHMs", FALSE, TRUE)
 for (x in grep("Adult", names(MouseBrainChIPNHMs), value = TRUE)) {
     for (y in names(MouseBrainChIPNHMs[[x]])) {
-        rtracklayer::export(MouseBrainChIPNHMs[[x]][[y]], con = sprintf("Report/release/Epigenome/MouseBrainChIPNHMs/%s_%s.bed.gz", x, y))
+        rtracklayer::export(MouseBrainChIPNHMs[[x]][[y]], con = sprintf("Report/Epigenome/MouseBrainChIPNHMs/%s_%s.bed.gz", x, y))
     }
 }
 ###########################################################################
@@ -689,15 +689,15 @@ HumanNonBDNAPeaks <- lapply(HumanNonBDNAPeaks, function(X) {
     mcols(X)[["composition"]] <- NULL
     X 
 })
-saveRDS(HumanNonBDNAPeaks, file = "Data/release/Epigenome/HumanNonBDNAPeaks.RDS")
+saveRDS(HumanNonBDNAPeaks, file = "Data/Epigenome/HumanNonBDNAPeaks.RDS")
 HumanNonBDNAPeaks <- lapply(HumanNonBDNAPeaks, function(X) {
     mcols(X)[["score"]] <- 0
     X 
 })
 
-dir.create("Report/release/Epigenome/HumanNonBDNAPeaks", FALSE, TRUE)
+dir.create("Report/Epigenome/HumanNonBDNAPeaks", FALSE, TRUE)
 for (q in c("Inverted", "Direct", "GQuadruplexForming", "Mirror", "ZDNAMotifs", "ShortTandem", "APhased")) {
-    rtracklayer::export(HumanNonBDNAPeaks[[q]], con = sprintf("Report/release/Epigenome/HumanNonBDNAPeaks/%s.bed.gz", q))
+    rtracklayer::export(HumanNonBDNAPeaks[[q]], con = sprintf("Report/Epigenome/HumanNonBDNAPeaks/%s.bed.gz", q))
 }
 
 MouseNonBDNAclasses <- c("inverted_repeats", "direct_repeats", "g-quadruplex_forming_repeats", "mirror_repeats", "z-dna_motifs", "short_tandem_repeats", "a-phased_repeats")
@@ -714,13 +714,13 @@ MouseNonBDNAPeaks <- lapply(MouseNonBDNAPeaks, function(X) {
     mcols(X)[["composition"]] <- NULL
     X 
 })
-saveRDS(MouseNonBDNAPeaks, file = "Data/release/Epigenome/MouseNonBDNAPeaks.RDS")
+saveRDS(MouseNonBDNAPeaks, file = "Data/Epigenome/MouseNonBDNAPeaks.RDS")
 MouseNonBDNAPeaks <- lapply(MouseNonBDNAPeaks, function(X) { 
     mcols(X)[["score"]] <- 0
     X 
 })
 
-dir.create("Report/release/Epigenome/MouseNonBDNAPeaks", FALSE, TRUE)
+dir.create("Report/Epigenome/MouseNonBDNAPeaks", FALSE, TRUE)
 for (q in c("Inverted", "Direct", "GQuadruplexForming", "Mirror", "ZDNAMotifs", "ShortTandem", "APhased")) {
-    rtracklayer::export(MouseNonBDNAPeaks[[q]], con = sprintf("Report/release/Epigenome/MouseNonBDNAPeaks/%s.bed.gz", q))
+    rtracklayer::export(MouseNonBDNAPeaks[[q]], con = sprintf("Report/Epigenome/MouseNonBDNAPeaks/%s.bed.gz", q))
 }

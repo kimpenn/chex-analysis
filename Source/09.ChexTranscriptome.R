@@ -8,9 +8,9 @@
 ## License, v. 2.0. If a copy of the MPL was not distributed with this
 ## file, You can obtain one at http://mozilla.org/MPL/2.0/.
 ###########################################################################
-source("Source/release/functions.R")
+source("Source/functions.R")
 
-SampleInfoFull <- read.csv("Data/release/SampleInfoFullOutAnnotated20201221CV2b.csv", as.is = TRUE, check.names = FALSE)
+SampleInfoFull <- read.csv("Data/SampleInfoFullOutAnnotated20201221CV2b.csv", as.is = TRUE, check.names = FALSE)
 sampleIDsFull <- rownames(SampleInfoFull) <- SampleInfoFull[["SampleID"]]
 SampleInfo <- subset(SampleInfoFull, CompType == "Biol")
 sampleIDs <- SampleInfoFull[, "SampleID"]
@@ -19,38 +19,38 @@ bioGroups <- c(
     "MouseAstroCulture", "MouseNeuronCulture", "MouseNeuronSlice", "MouseInterneuronSlice"
 )
 
-EnsFeatures <- readRDS("Data/release/GenomicFeatures/EnsFeatures.RDS")
-EnsFlanksByGene <- readRDS("Data/release/GenomicFeatures/EnsFlanksByGene.RDS")
-EnsGeneIDsByGencodeLevel <- readRDS("Data/release/GenomicFeatures/EnsGeneIDsByGencodeLevel.RDS")
-EnsFeatureLengthsByGene <- readRDS(file = "Data/release/GenomicFeatures/EnsFeatureLengthsByGene.RDS")
+EnsFeatures <- readRDS("Data/GenomicFeatures/EnsFeatures.RDS")
+EnsFlanksByGene <- readRDS("Data/GenomicFeatures/EnsFlanksByGene.RDS")
+EnsGeneIDsByGencodeLevel <- readRDS("Data/GenomicFeatures/EnsGeneIDsByGencodeLevel.RDS")
+EnsFeatureLengthsByGene <- readRDS(file = "Data/GenomicFeatures/EnsFeatureLengthsByGene.RDS")
 EnsFeatureLengthsByGene$none <- EnsFeatureLengthsByGene$mouse
 
-K562RNAExonExprs <- readRDS("Data/release/Transcriptome/K562RNAExonExprs.RDS")
-K562RNAIntronExprs <- readRDS("Data/release/Transcriptome/K562RNAIntronExprs.RDS")
-K562RNAGeneExprs <- readRDS("Data/release/Transcriptome/K562RNAGeneExprs.RDS")
+K562RNAExonExprs <- readRDS("Data/Transcriptome/K562RNAExonExprs.RDS")
+K562RNAIntronExprs <- readRDS("Data/Transcriptome/K562RNAIntronExprs.RDS")
+K562RNAGeneExprs <- readRDS("Data/Transcriptome/K562RNAGeneExprs.RDS")
 
-K562GROExonExprs <- readRDS("Data/release/Transcriptome/K562GROExonExprs.RDS")
-K562GROIntronExprs <- readRDS("Data/release/Transcriptome/K562GROIntronExprs.RDS")
-K562GROGeneExprs <- readRDS("Data/release/Transcriptome/K562GROGeneExprs.RDS")
+K562GROExonExprs <- readRDS("Data/Transcriptome/K562GROExonExprs.RDS")
+K562GROIntronExprs <- readRDS("Data/Transcriptome/K562GROIntronExprs.RDS")
+K562GROGeneExprs <- readRDS("Data/Transcriptome/K562GROGeneExprs.RDS")
 
-K562scRNAExonExprs <- readRDS("Data/release/Transcriptome/K562scRNAExonExprs.RDS")
-K562scRNAGeneExprs <- readRDS("Data/release/Transcriptome/K562scRNAGeneExprs.RDS")
+K562scRNAExonExprs <- readRDS("Data/Transcriptome/K562scRNAExonExprs.RDS")
+K562scRNAGeneExprs <- readRDS("Data/Transcriptome/K562scRNAGeneExprs.RDS")
 
-HumanAstroRNAExonExprs <- readRDS("Data/release/Transcriptome/HumanAstroRNAExonExprs.RDS")
-HumanAstroRNAIntronExprs <- readRDS("Data/release/Transcriptome/HumanAstroRNAIntronExprs.RDS")
-HumanAstroRNAGeneExprs <- readRDS("Data/release/Transcriptome/HumanAstroRNAGeneExprs.RDS")
+HumanAstroRNAExonExprs <- readRDS("Data/Transcriptome/HumanAstroRNAExonExprs.RDS")
+HumanAstroRNAIntronExprs <- readRDS("Data/Transcriptome/HumanAstroRNAIntronExprs.RDS")
+HumanAstroRNAGeneExprs <- readRDS("Data/Transcriptome/HumanAstroRNAGeneExprs.RDS")
 
-HumanNeuronRNAExonExprs <- readRDS("Data/release/Transcriptome/HumanNeuronRNAExonExprs.RDS")
-HumanNeuronRNAIntronExprs <- readRDS("Data/release/Transcriptome/HumanNeuronRNAIntronExprs.RDS")
-HumanNeuronRNAGeneExprs <- readRDS("Data/release/Transcriptome/HumanNeuronRNAGeneExprs.RDS")
+HumanNeuronRNAExonExprs <- readRDS("Data/Transcriptome/HumanNeuronRNAExonExprs.RDS")
+HumanNeuronRNAIntronExprs <- readRDS("Data/Transcriptome/HumanNeuronRNAIntronExprs.RDS")
+HumanNeuronRNAGeneExprs <- readRDS("Data/Transcriptome/HumanNeuronRNAGeneExprs.RDS")
 
-MouseAstroRNAExonExprs <- readRDS("Data/release/Transcriptome/MouseAstroRNAExonExprs.RDS")
-MouseAstroRNAIntronExprs <- readRDS("Data/release/Transcriptome/MouseAstroRNAIntronExprs.RDS")
-MouseAstroRNAGeneExprs <- readRDS("Data/release/Transcriptome/MouseAstroRNAGeneExprs.RDS")
+MouseAstroRNAExonExprs <- readRDS("Data/Transcriptome/MouseAstroRNAExonExprs.RDS")
+MouseAstroRNAIntronExprs <- readRDS("Data/Transcriptome/MouseAstroRNAIntronExprs.RDS")
+MouseAstroRNAGeneExprs <- readRDS("Data/Transcriptome/MouseAstroRNAGeneExprs.RDS")
 
-MouseNeuronRNAExonExprs <- readRDS("Data/release/Transcriptome/MouseNeuronRNAExonExprs.RDS")
-MouseNeuronRNAIntronExprs <- readRDS("Data/release/Transcriptome/MouseNeuronRNAIntronExprs.RDS")
-MouseNeuronRNAGeneExprs <- readRDS("Data/release/Transcriptome/MouseNeuronRNAGeneExprs.RDS")
+MouseNeuronRNAExonExprs <- readRDS("Data/Transcriptome/MouseNeuronRNAExonExprs.RDS")
+MouseNeuronRNAIntronExprs <- readRDS("Data/Transcriptome/MouseNeuronRNAIntronExprs.RDS")
+MouseNeuronRNAGeneExprs <- readRDS("Data/Transcriptome/MouseNeuronRNAGeneExprs.RDS")
 
 bioGroupCols <- structure(if (length(bioGroups) <= 9) { brewer.pal(n = length(bioGroups), "Set1") } else { colorRampPalette(brewer.pal(n = 9, "Set1"))(length(bioGroups)) }, names = bioGroups)
 trtGroups <- c("PositiveSingle", "PositivePooled", "PositiveMerged", "PositiveAll")
@@ -74,13 +74,13 @@ EnsIDToSymbolMap <- sapply(Species, function(species) structure(mcols(EnsFeature
 featureTypesByGene <- c("GeneExt", "Gene", "Flank5kByGene", "PromoterByGene", "FiveUTRByGene", "ExonByGene", "IntronByGene", "ThreeUTRByGene", "DownstreamByGene", "CDSByGene")
 flankDistLabs <- paste("Flank", c("100", "200", "500", "1k", "2k", "3k", "4k", "5k"), sep = "")
 
-## We finanlly decide on the quality class: ABreadCmate5End and ge20_le0.1_strict
+## We finally decided on ABreadCmate5End and ge20_le0.1_strict
 qualOutInPairs <- c("ABreadCmate5End", "ABread5End", "Aread5End", "Bread5End", "Cmate5End", "Deither5End")[1]
 mapqThs <- c("ge20_le0.1_strict", "ge30_le0.1", "ge20_le0.1", "ge10_le0.1")[1]
 
 PFsFiltered <- sapply(mapqThs, function(th) {
     sapply(qualOutInPairs, function(qualOutInPair) {
-        filename <- sprintf("Data/release/PrimingRateGene/PFs%sFiltered_%s.RDS", qualOutInPair, th)
+        filename <- sprintf("Data/PrimingRateGene/PFs%sFiltered_%s.RDS", qualOutInPair, th)
         message(filename)
         readRDS(filename)
     }, simplify = FALSE)
@@ -88,7 +88,7 @@ PFsFiltered <- sapply(mapqThs, function(th) {
 
 FlankPFsFiltered <- sapply(mapqThs, function(th) {
     sapply(qualOutInPairs, function(qualOutInPair) {
-        filename <- sprintf("Data/release/PrimingRateGene/FlankPFs%sFiltered_%s.RDS", qualOutInPair, th)
+        filename <- sprintf("Data/PrimingRateGene/FlankPFs%sFiltered_%s.RDS", qualOutInPair, th)
         message(filename)
         readRDS(filename)
     }, simplify = FALSE)
@@ -139,7 +139,7 @@ for (qualOutInPair in qualOutInPairs) {
     for (mapqTh in mapqThs) {
         Ycutoffs <- c("median", "zero")
         gList <- list()
-        dir.create(sprintf("Report/release/ChexTranscriptome/ChexExprsBinaryVenn/%s_%s", qualOutInPair, mapqTh), FALSE, TRUE)
+        dir.create(sprintf("Report/ChexTranscriptome/ChexExprsBinaryVenn/%s_%s", qualOutInPair, mapqTh), FALSE, TRUE)
         for (i in seq(nrow(BioGroupRNAFeatureTypeMap))) {
             bioGroup <- BioGroupRNAFeatureTypeMap[i, "BioGroup"]
             species <- bioGroup2Species[bioGroup]
@@ -173,7 +173,7 @@ for (qualOutInPair in qualOutInPairs) {
             TxLab <- paste0(MetaGroup, Tx, TxFeatureType, DataType)
             grobTrees <- vector("list", length(Ycutoffs) * length(featureTypesByGene))
             i <- 0
-            filename <- sprintf("Report/release/ChexTranscriptome/ChexExprsBinaryVenn/%s_%s/%s_%s.pdf", qualOutInPair, mapqTh, bioGroup, TxLab)
+            filename <- sprintf("Report/ChexTranscriptome/ChexExprsBinaryVenn/%s_%s/%s_%s.pdf", qualOutInPair, mapqTh, bioGroup, TxLab)
             pdf(filename, width = 15, height = 3)
             for (Ycutoff in Ycutoffs) {
                 for (featureTypeByGene in featureTypesByGene) {
@@ -201,7 +201,7 @@ for (qualOutInPair in qualOutInPairs) {
 ###########################################################################
 ## Correlate CHEX priming density and gene expression levels
 ###########################################################################
-dir.create("Report/release/ChexTranscriptome/ExprsByChexCellNum", FALSE, TRUE)
+dir.create("Report/ChexTranscriptome/ExprsByChexCellNum", FALSE, TRUE)
 for (qualOutInPair in qualOutInPairs[1]) {
     for (mapqTh in mapqThs[1]) {
         for (bioGroup in bioGroups[11]) {
@@ -210,8 +210,8 @@ for (qualOutInPair in qualOutInPairs[1]) {
             sampleIDs <- subset(SampleInfoFull, IsNegCtrl == "N" & BioGroup == bioGroup & ProbeType == "Positive" & Composition == "Single" & IsOut == "N")[, "SampleID"]
             if (length(sampleIDs) > 1) {
                 for (Expr in Exprs[2]) {
-                    dir.create(sprintf("Report/release/ChexTranscriptome/ExprsByChexCellNum/%s_%s", qualOutInPair, mapqTh), FALSE, TRUE)
-                    filename <- sprintf("Report/release/ChexTranscriptome/ExprsByChexCellNum/%s_%s/%s_%s.pdf", qualOutInPair, mapqTh, bioGroup, Expr)
+                    dir.create(sprintf("Report/ChexTranscriptome/ExprsByChexCellNum/%s_%s", qualOutInPair, mapqTh), FALSE, TRUE)
+                    filename <- sprintf("Report/ChexTranscriptome/ExprsByChexCellNum/%s_%s/%s_%s.pdf", qualOutInPair, mapqTh, bioGroup, Expr)
                     exprs <- get(Expr)
                     exprsInt <- rowMeans(exprs)
                     pdf(filename, height = 3, width = 3)
@@ -219,7 +219,7 @@ for (qualOutInPair in qualOutInPairs[1]) {
                         Chex <- PFsFiltered[[mapqTh]][[qualOutInPair]][[species]][[featureTypeByGene]][, sampleIDs, drop = FALSE]
                         ChexInt <- rowSums(Chex > 0)
                         genes <- intersect(names(ChexInt), names(exprsInt))
-                        ## overlapgenes <- readLines("Report/release/ChexTranscriptome/FilterOverlapGenes/EnsGeneMouse_OverlappingGenes.txt")
+                        ## overlapgenes <- readLines("Report/ChexTranscriptome/FilterOverlapGenes/EnsGeneMouse_OverlappingGenes.txt")
                         ## genes <- setdiff(genes, overlapgenes)
                         message(qualOutInPair, " ", mapqTh, " ", bioGroup, " ", Expr, " ", featureTypeByGene, "...")
                         X <- data.frame(Chex = as.integer(ChexInt[genes]), Exprs = exprsInt[genes])
@@ -235,10 +235,10 @@ for (qualOutInPair in qualOutInPairs[1]) {
 ###########################################################################
 ## Chex-seq number of primed cells vs Expression variability
 ###########################################################################
-dir.create("Report/release/ChexTranscriptome/ExprsVarByChexCellNum", FALSE, TRUE)
+dir.create("Report/ChexTranscriptome/ExprsVarByChexCellNum", FALSE, TRUE)
 for (qualOutInPair in qualOutInPairs) {
     for (mapqTh in mapqThs) {
-        dir.create(sprintf("Report/release/ChexTranscriptome/ExprsVarByChexCellNum/%s_%s", qualOutInPair, mapqTh), FALSE, TRUE)
+        dir.create(sprintf("Report/ChexTranscriptome/ExprsVarByChexCellNum/%s_%s", qualOutInPair, mapqTh), FALSE, TRUE)
         for (bioGroup in bioGroups[12]) {
             Exprs <- ChexExprsMap[[bioGroup]]
             species <- bioGroup2Species[bioGroup]
@@ -246,14 +246,14 @@ for (qualOutInPair in qualOutInPairs) {
             for (Expr in Exprs) {
                 exprs <- get(Expr)
                 if (length(sampleIDs) > 1 & ncol(exprs) > 1) {
-                    filename <- sprintf("Report/release/ChexTranscriptome/ExprsVarByChexCellNum/%s_%s/%s_%s.pdf", qualOutInPair, mapqTh, bioGroup, Expr)
+                    filename <- sprintf("Report/ChexTranscriptome/ExprsVarByChexCellNum/%s_%s/%s_%s.pdf", qualOutInPair, mapqTh, bioGroup, Expr)
                     exprsCV <- apply(exprs, 1, Stats$cv)
                     pdf(filename, height = 3, width = 3)
                     for (featureTypeByGene in featureTypesByGene) {
                         Chex <- PFsFiltered[[mapqTh]][[qualOutInPair]][[species]][[featureTypeByGene]][, sampleIDs, drop = FALSE]
                         Chex <- rowSums(Chex > 0)
                         genes <- intersect(names(Chex), names(exprsCV))
-                        ## overlapgenes <- readLines("Report/release/ChexTranscriptome/FilterOverlapGenes/EnsGeneMouse_OverlappingGenes.txt")
+                        ## overlapgenes <- readLines("Report/ChexTranscriptome/FilterOverlapGenes/EnsGeneMouse_OverlappingGenes.txt")
                         ## genes <- setdiff(genes, overlapgenes)
                         message(qualOutInPair, " ", mapqTh, " ", bioGroup, " ", featureTypeByGene, " ", Expr, "...")
                         X <- data.frame(Chex = Chex[genes], Exprs = exprsCV[genes])
@@ -269,17 +269,17 @@ for (qualOutInPair in qualOutInPairs) {
 ###########################################################################
 ## We hypothesize that genes with >0 CHEX counts close to TSS have higher experssion than those with CHEX counts at distance
 ###########################################################################
-dir.create("Report/release/ChexTranscriptome/ExprsByChexTSSDist", FALSE, TRUE)
+dir.create("Report/ChexTranscriptome/ExprsByChexTSSDist", FALSE, TRUE)
 for (qualOutInPair in qualOutInPairs) {
     for (mapqTh in mapqThs) {
-        dir.create(sprintf("Report/release/ChexTranscriptome/ExprsByChexTSSDist/%s_%s", qualOutInPair, mapqTh), FALSE, TRUE)
+        dir.create(sprintf("Report/ChexTranscriptome/ExprsByChexTSSDist/%s_%s", qualOutInPair, mapqTh), FALSE, TRUE)
         for (bioGroup in bioGroups) {
             Exprs <- ChexExprsMap[[bioGroup]]
             species <- bioGroup2Species[bioGroup]
             sampleID <- sampleIDsVirtmaxByBioGroup[bioGroup]
             SIDs <- strsplit(SampleInfoFull[sampleID, "SourceIDsNoOut"], ",")[[1]]
             for (Expr in Exprs) {
-                filename <- sprintf("Report/release/ChexTranscriptome/ExprsByChexTSSDist/%s_%s/%s_%s.pdf", qualOutInPair, mapqTh, bioGroup, Expr)
+                filename <- sprintf("Report/ChexTranscriptome/ExprsByChexTSSDist/%s_%s/%s_%s.pdf", qualOutInPair, mapqTh, bioGroup, Expr)
                 exprs <- get(Expr)
                 avgExprs <- rowMeans(exprs)
                 pdf(filename, height = 3, width = 3)
@@ -310,7 +310,7 @@ for (qualOutInPair in qualOutInPairs) {
 ###########################################################################
 ## sampleIDVirtmax in each CHEX bioGroup x each TranscriptomeComplete
 ## #. of bioGroups x #. of ChexExprsMapComplete
-dir.create("Data/release/ChexTranscriptome", FALSE, TRUE)
+dir.create("Data/ChexTranscriptome", FALSE, TRUE)
 for (qualOutInPair in qualOutInPairs[1]) {
     for (mapqTh in mapqThs[1]) {
         ChexExprsVirmaxCompleteBinTables <- sapply(bioGroups, function(bioGroup) {
@@ -332,15 +332,15 @@ for (qualOutInPair in qualOutInPairs[1]) {
                 BinTables
             }, simplify = FALSE)
         }, simplify = FALSE)
-        saveRDS(ChexExprsVirmaxCompleteBinTables, file = sprintf("Data/release/ChexTranscriptome/%s_%s_ChexExprsVirmaxCompleteBinTables.RDS", qualOutInPair, mapqTh))
+        saveRDS(ChexExprsVirmaxCompleteBinTables, file = sprintf("Data/ChexTranscriptome/%s_%s_ChexExprsVirmaxCompleteBinTables.RDS", qualOutInPair, mapqTh))
     }
 }
 
-ChexExprsVirmaxCompleteBinTables <- readRDS(sprintf("Data/release/ChexTranscriptome/%s_%s_ChexExprsVirmaxCompleteBinTables.RDS", qualOutInPair, mapqTh))
+ChexExprsVirmaxCompleteBinTables <- readRDS(sprintf("Data/ChexTranscriptome/%s_%s_ChexExprsVirmaxCompleteBinTables.RDS", qualOutInPair, mapqTh))
 
 delta <- 1
 ChexExprsVirtmaxCompleteBinFETpvals <- rapply(ChexExprsVirmaxCompleteBinTables, function(x) { fisher.test(x + delta, alternative = "greater")$p.value}, how = "replace")
-dir.create(sprintf("Report/release/ChexTranscriptome/ChexExprsCompleteBinTable/%s_%s", qualOutInPair, mapqTh), FALSE, TRUE)
+dir.create(sprintf("Report/ChexTranscriptome/ChexExprsCompleteBinTable/%s_%s", qualOutInPair, mapqTh), FALSE, TRUE)
 ChexExprsVirtmaxCompleteBinFETpvalsTab <- sapply(bioGroups, function(bioGroup) {
     Exprs <- ChexExprsMapComplete[[bioGroup]]
     sapply(Exprs, function(Expr) {
@@ -363,14 +363,14 @@ ChexExprsVirtmaxCompleteBinFETpvalHmsByBioGroup <- lapply(bioGroups, function(bi
     colnames(X) <- sub("ByGene", "", colnames(X))
     pheatmap(-log10(X + log10pBase), cluster_rows = FALSE, cluster_cols = FALSE, cellwidth = 8, cellheight = 8, fontsize = 6, fontsize_col = 6, fontsize_row = 6, angle_col = 45, main = bioGroup, border_color = NA)[[4]]
 })
-ggsave(filename = sprintf("Report/release/ChexTranscriptome/ChexExprsCompleteBinTable/%s_%s/ChexExprsVirtmaxCompleteBinFETpvalHmsByBioGroup.pdf", qualOutInPair, mapqTh), plot = grid.arrange(grobs = ChexExprsVirtmaxCompleteBinFETpvalHmsByBioGroup, ncol = 1), height = dim(BioGroupRNAFeatureTypeMapComplete) / 5, width = 5, unit = "in", limitsize = FALSE)
+ggsave(filename = sprintf("Report/ChexTranscriptome/ChexExprsCompleteBinTable/%s_%s/ChexExprsVirtmaxCompleteBinFETpvalHmsByBioGroup.pdf", qualOutInPair, mapqTh), plot = grid.arrange(grobs = ChexExprsVirtmaxCompleteBinFETpvalHmsByBioGroup, ncol = 1), height = dim(BioGroupRNAFeatureTypeMapComplete) / 5, width = 5, unit = "in", limitsize = FALSE)
 ChexExprsVirtmaxCompleteBinFETpvalHmsByBioGroup_SameScale <- lapply(bioGroups, function(bioGroup) {
     X <- t(ChexExprsVirtmaxCompleteBinFETpvalsByBioGroup[[bioGroup]])
     rownames(X) <- sub("Exprs", "", rownames(X))
     colnames(X) <- sub("ByGene", "", colnames(X))
     pheatmap(-log10(X + log10pBase), cluster_rows = FALSE, cluster_cols = FALSE, cellwidth = 8, cellheight = 8, fontsize = 6, fontsize_col = 6, fontsize_row = 6, angle_col = 45, main = bioGroup, border_color = NA, col = colorRampPalette(rev(brewer.pal(n = 9, name = "RdYlBu")))(255), breaks = seq(0, 200, length.out = 256))[[4]]
 })
-ggsave(filename = sprintf("Report/release/ChexTranscriptome/ChexExprsCompleteBinTable/%s_%s/ChexExprsVirtmaxCompleteBinFETpvalHmsByBioGroup_SameScale.pdf", qualOutInPair, mapqTh), plot = grid.arrange(grobs = ChexExprsVirtmaxCompleteBinFETpvalHmsByBioGroup_SameScale, ncol = 1), height = dim(BioGroupRNAFeatureTypeMapComplete) / 5, width = 5, unit = "in", limitsize = FALSE)
+ggsave(filename = sprintf("Report/ChexTranscriptome/ChexExprsCompleteBinTable/%s_%s/ChexExprsVirtmaxCompleteBinFETpvalHmsByBioGroup_SameScale.pdf", qualOutInPair, mapqTh), plot = grid.arrange(grobs = ChexExprsVirtmaxCompleteBinFETpvalHmsByBioGroup_SameScale, ncol = 1), height = dim(BioGroupRNAFeatureTypeMapComplete) / 5, width = 5, unit = "in", limitsize = FALSE)
  
 ChexExprsVirtmaxCompleteBinFEToddRatios <- rapply(ChexExprsVirmaxCompleteBinTables, function(x) { fisher.test(x + delta, alternative = "greater")$estimate}, how = "replace")
 ChexExprsVirtmaxCompleteBinFEToddRatiosTab <- sapply(bioGroups, function(bioGroup) {
@@ -394,19 +394,19 @@ ChexExprsVirtmaxCompleteBinFEToddRatioHmsByBioGroup <- lapply(bioGroups, functio
     colnames(X) <- sub("ByGene", "", colnames(X))
     pheatmap(log2(X), cluster_rows = FALSE, cluster_cols = FALSE, cellwidth = 8, cellheight = 8, fontsize = 6, fontsize_col = 6, fontsize_row = 6, angle_col = 45, border_color = NA, main = bioGroup)[[4]]
 })
-ggsave(filename = sprintf("Report/release/ChexTranscriptome/ChexExprsCompleteBinTable/%s_%s/ChexExprsVirtmaxCompleteBinFEToddRatioHmsByBioGroup.pdf", qualOutInPair, mapqTh), plot = grid.arrange(grobs = ChexExprsVirtmaxCompleteBinFEToddRatioHmsByBioGroup, ncol = 1), height = dim(BioGroupRNAFeatureTypeMapComplete) / 5, width = 5, unit = "in", limitsize = FALSE)
+ggsave(filename = sprintf("Report/ChexTranscriptome/ChexExprsCompleteBinTable/%s_%s/ChexExprsVirtmaxCompleteBinFEToddRatioHmsByBioGroup.pdf", qualOutInPair, mapqTh), plot = grid.arrange(grobs = ChexExprsVirtmaxCompleteBinFEToddRatioHmsByBioGroup, ncol = 1), height = dim(BioGroupRNAFeatureTypeMapComplete) / 5, width = 5, unit = "in", limitsize = FALSE)
 ChexExprsVirtmaxCompleteBinFEToddRatioHmsByBioGroup_SameScale <- lapply(bioGroups, function(bioGroup) {
     X <- t(ChexExprsVirtmaxCompleteBinFEToddRatiosByBioGroup[[bioGroup]])
     rownames(X) <- sub("Exprs", "", rownames(X))
     colnames(X) <- sub("ByGene", "", colnames(X))
     pheatmap(log2(X), cluster_rows = FALSE, cluster_cols = FALSE, cellwidth = 8, cellheight = 8, fontsize = 6, fontsize_col = 6, fontsize_row = 6, angle_col = 45, border_color = NA, main = bioGroup, col = colorRampPalette(rev(brewer.pal(n = 9, name = "RdYlBu")))(255), breaks = seq(-2, 4, length.out = 256))[[4]]
 })
-ggsave(filename = sprintf("Report/release/ChexTranscriptome/ChexExprsCompleteBinTable/%s_%s/ChexExprsVirtmaxCompleteBinFEToddRatioHmsByBioGroup_SameScale.pdf", qualOutInPair, mapqTh), plot = grid.arrange(grobs = ChexExprsVirtmaxCompleteBinFEToddRatioHmsByBioGroup_SameScale, ncol = 1), height = dim(BioGroupRNAFeatureTypeMapComplete) / 5, width = 5, unit = "in", limitsize = FALSE)
+ggsave(filename = sprintf("Report/ChexTranscriptome/ChexExprsCompleteBinTable/%s_%s/ChexExprsVirtmaxCompleteBinFEToddRatioHmsByBioGroup_SameScale.pdf", qualOutInPair, mapqTh), plot = grid.arrange(grobs = ChexExprsVirtmaxCompleteBinFEToddRatioHmsByBioGroup_SameScale, ncol = 1), height = dim(BioGroupRNAFeatureTypeMapComplete) / 5, width = 5, unit = "in", limitsize = FALSE)
 
 ###########################################################################
 ## Each individual CHEX SampleFull x each TranscriptomeComplete
 ###########################################################################
-dir.create("Data/release/ChexTranscriptome", FALSE, TRUE)
+dir.create("Data/ChexTranscriptome", FALSE, TRUE)
 ncores <- 10
 for (qualOutInPair in qualOutInPairs[1]) {
     for (mapqTh in mapqThs[1]) {
@@ -433,13 +433,13 @@ for (qualOutInPair in qualOutInPairs[1]) {
                 }, simplify = FALSE)
             }, mc.cores = ncores)
             names(BinTables) <- SIDs
-            filename <- sprintf("Data/release/ChexTranscriptome/%s_%s_ChexExprsCompleteBinTables_%s.RDS", qualOutInPair, mapqTh, bioGroup)
+            filename <- sprintf("Data/ChexTranscriptome/%s_%s_ChexExprsCompleteBinTables_%s.RDS", qualOutInPair, mapqTh, bioGroup)
             saveRDS(BinTables, file = filename)
         }
     }
 }
 ChexExprsCompleteBinTables <- sapply(bioGroups, function(bioGroup) {
-    filename <- sprintf("Data/release/ChexTranscriptome/%s_%s_ChexExprsCompleteBinTables_%s.RDS", qualOutInPair, mapqTh, bioGroup)
+    filename <- sprintf("Data/ChexTranscriptome/%s_%s_ChexExprsCompleteBinTables_%s.RDS", qualOutInPair, mapqTh, bioGroup)
     readRDS(file = filename)
 }, simplify = FALSE)
 
@@ -477,7 +477,7 @@ ChexExprsCompleteBinFEToddsRatioTab <- sapply(bioGroups, function(bioGroup) {
     }, simplify = FALSE)
 }, simplify = FALSE)
 
-dirname <- sprintf("Report/release/ChexTranscriptome/ChexExprsCompleteBinTable/%s_%s/ChexExprsBinFEToddsRatioHms", qualOutInPair, mapqTh)
+dirname <- sprintf("Report/ChexTranscriptome/ChexExprsCompleteBinTable/%s_%s/ChexExprsBinFEToddsRatioHms", qualOutInPair, mapqTh)
 dir.create(dirname, FALSE, TRUE)
 for (bioGroup in bioGroups) {
     Exprs <- ChexExprsMapComplete[[bioGroup]]
@@ -494,31 +494,8 @@ for (bioGroup in bioGroups) {
         }
     }
 }
-
-dirname <- sprintf("Report/release/ChexTranscriptome/ChexExprsCompleteBinTable/%s_%s/ChexExprsBinFEToddsRatioHms_NoClust", qualOutInPair, mapqTh)
-dir.create(dirname, FALSE, TRUE)
-for (bioGroup in bioGroups) {
-    Exprs <- ChexExprsMapComplete[[bioGroup]]
-    species <- bioGroup2Species[bioGroup]
-    SIDs <- subset(SampleInfoFull, IsNegCtrl == "N" & BioGroup == bioGroup & ProbeType == "Positive" & IsOut == "N")[, "SampleID"]
-    hmList <- list()
-    for (Expr in Exprs) {
-        X <- ChexExprsCompleteBinFEToddsRatioTab[[bioGroup]][[Expr]]
-        if (ncol(X) > 1) {
-            filename <- sprintf("%s/%s_%s.pdf", dirname, bioGroup, Expr)
-            pdf(filename, height = 6, width = 30)
-            Y <- log2(X[c(1, 4, 6, 7), ])
-            Y1 <- Y[, SampleInfoFull[colnames(Y), "CompType"] == "Biol"]
-            Y2 <- Y[, SampleInfoFull[colnames(Y), "CompType"] == "Virtual"]
-            Y1 <- Y1[, hclust(dist(t(Y1)))[["order"]]]
-            Z <- cbind(Y1, Y2)
-            pheatmap(Z, cluster_rows = FALSE, cluster_cols = FALSE, annotation_col = SampleInfoFull[SIDs, c("TrtGroup"), drop = FALSE], scale = "none", fontsize_row = 10, fontsize_col = 10, show_colnames = TRUE, annotation_colors = annotationColorsList[[species]], labels_col = with(SampleInfoFull[SIDs, ], paste0("E.", ExptID, " #", sub("scCLTdegenNuc", "", SampleID))), border_color = NA, angle_col = 45, cellwidth = 11, cellheight = 11, main = Expr, treeheight_col = 0, treeheight_row = 0)
-            dev.off()
-        }
-    }
-}
  
-dirname <- sprintf("Report/release/ChexTranscriptome/ChexExprsCompleteBinTable/%s_%s/ChexExprsBinFETpvalHms_NoClust", qualOutInPair, mapqTh)
+dirname <- sprintf("Report/ChexTranscriptome/ChexExprsCompleteBinTable/%s_%s/ChexExprsBinFETpvalHms", qualOutInPair, mapqTh)
 dir.create(dirname, FALSE, TRUE)
 for (bioGroup in bioGroups) {
     Exprs <- ChexExprsMapComplete[[bioGroup]]
@@ -543,9 +520,9 @@ for (bioGroup in bioGroups) {
 ## 3. genes unique to RNA
 ###########################################################################
 ## GO enrichment analysis of overlapping genes
-OrgDbGOSymbolList <- readRDS(file = "Data/release/GenomicFeatures/Annotations/OrgDbGOSymbolList.RDS")
+OrgDbGOSymbolList <- readRDS(file = "Data/GenomicFeatures/Annotations/OrgDbGOSymbolList.RDS")
 OrgDbGOSymbolList$none <- OrgDbGOSymbolList$mouse
-OrgDbGONameList <- readRDS(file = "Data/release/GenomicFeatures/Annotations/OrgDbGONameList.RDS")
+OrgDbGONameList <- readRDS(file = "Data/GenomicFeatures/Annotations/OrgDbGONameList.RDS")
 OrgDbGONameList$none <- OrgDbGONameList$mouse
 GOonts <- c("MF", "BP", "CC")
 Ycutoffs <- c("median")
@@ -580,13 +557,13 @@ for (qualOutInPair in qualOutInPairs) {
                 }
             }
         }
-        saveRDS(CommDiffGenes, file = sprintf("Data/release/ChexTranscriptome/%s_%s_ChexExprsCommDiffGenes.RDS", qualOutInPair, mapqTh))
+        saveRDS(CommDiffGenes, file = sprintf("Data/ChexTranscriptome/%s_%s_ChexExprsCommDiffGenes.RDS", qualOutInPair, mapqTh))
     }
 }
-CommDiffGenes <- readRDS(file = sprintf("Data/release/ChexTranscriptome/%s_%s_ChexExprsCommDiffGenes.RDS", qualOutInPair, mapqTh))
+CommDiffGenes <- readRDS(file = sprintf("Data/ChexTranscriptome/%s_%s_ChexExprsCommDiffGenes.RDS", qualOutInPair, mapqTh))
  
 for (GOont in GOonts) {
-    filename <- sprintf("Data/release/ChexTranscriptome/%s_%s_GOenrichChexTxOverlap_%s.RDS", qualOutInPair, mapqTh, GOont)
+    filename <- sprintf("Data/ChexTranscriptome/%s_%s_GOenrichChexTxOverlap_%s.RDS", qualOutInPair, mapqTh, GOont)
     GOenrichChexTxOverlap <- list()
     for (i in seq(nrow(BioGroupRNAFeatureTypeMap))) {
         bioGroup <- BioGroupRNAFeatureTypeMap[i, "BioGroup"]
@@ -619,7 +596,7 @@ for (GOont in GOonts) {
 }
 
 for (GOont in GOonts) {
-    filename <- sprintf("Data/release/ChexTranscriptome/%s_%s_GOenrichChexUniq_%s.RDS", qualOutInPair, mapqTh, GOont)
+    filename <- sprintf("Data/ChexTranscriptome/%s_%s_GOenrichChexUniq_%s.RDS", qualOutInPair, mapqTh, GOont)
     GOenrichChexUniq <- list()
     for (i in seq(nrow(BioGroupRNAFeatureTypeMap))) {
         bioGroup <- BioGroupRNAFeatureTypeMap[i, "BioGroup"]
@@ -652,7 +629,7 @@ for (GOont in GOonts) {
 }
 
 for (GOont in GOonts) {
-    filename <- sprintf("Data/release/ChexTranscriptome/%s_%s_GOenrichTxUniq_%s.RDS", qualOutInPair, mapqTh, GOont)
+    filename <- sprintf("Data/ChexTranscriptome/%s_%s_GOenrichTxUniq_%s.RDS", qualOutInPair, mapqTh, GOont)
     GOenrichTxUniq <- list()
     for (i in seq(nrow(BioGroupRNAFeatureTypeMap))) {
         bioGroup <- BioGroupRNAFeatureTypeMap[i, "BioGroup"]
@@ -687,10 +664,10 @@ for (GOont in GOonts) {
 ###########################################################################
 ## Figures for GO enrichment of CHEX-RNA overlapping genes
 ###########################################################################
-dir.create(sprintf("Report/release/ChexTranscriptome/EnrichChexExprsOverlap/%s_%s", qualOutInPair, mapqTh), FALSE, TRUE)
+dir.create(sprintf("Report/ChexTranscriptome/EnrichChexExprsOverlap/%s_%s", qualOutInPair, mapqTh), FALSE, TRUE)
 GOontLabs <- c(MF = "GO: Molecular Function", BP = "GO: Biological Process", CC = "GO: Cellular Components")
 for (GOont in GOonts) {
-    GOenrichChexTxOverlap <- readRDS(sprintf("Data/release/ChexTranscriptome/%s_%s_GOenrichChexTxOverlap_%s.RDS", qualOutInPair, mapqTh, GOont))
+    GOenrichChexTxOverlap <- readRDS(sprintf("Data/ChexTranscriptome/%s_%s_GOenrichChexTxOverlap_%s.RDS", qualOutInPair, mapqTh, GOont))
     for (i in seq(nrow(BioGroupRNAFeatureTypeMap))) {
         bioGroup <- BioGroupRNAFeatureTypeMap[i, "BioGroup"]
         Tx <- BioGroupRNAFeatureTypeMap[i, "Transcriptome"]
@@ -699,7 +676,7 @@ for (GOont in GOonts) {
         TxLab <- paste0(Tx, TxFeatureType, DataType)
         MetaGroup <- BioGroupRNAFeatureTypeMap[i, "MetaGroup"]
         MetaTxLab <- paste0(MetaGroup, TxLab)
-        pdf(sprintf("Report/release/ChexTranscriptome/EnrichChexExprsOverlap/%s_%s/GO_%s_%s_%s_median_GeneExt.pdf", qualOutInPair, mapqTh, GOont, bioGroup, MetaTxLab), width = 4, height = 2)
+        pdf(sprintf("Report/ChexTranscriptome/EnrichChexExprsOverlap/%s_%s/GO_%s_%s_%s_median_GeneExt.pdf", qualOutInPair, mapqTh, GOont, bioGroup, MetaTxLab), width = 4, height = 2)
         par(mar = c(2, 10, 1, 2))
         top <- 20
         cols = colorRampPalette(c("lightblue", "steelblue"))(256)
